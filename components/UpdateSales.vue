@@ -82,12 +82,10 @@ export default {
         noHp: "",
         jenisKelamin: "",
       },
-      id: "",
-      images: "",
+      id: localStorage.getItem("id"),
       loading: false,
       loadingTime: 0,
       maxLoadingTime: 3,
-      file: null,
       spinner: false,
       showNameBox: false,
       options: [
@@ -120,7 +118,6 @@ export default {
   },
   created() {
     this.$_loadingTimeInterval = null;
-    this.id = localStorage.getItem("id");
     this.getProfile();
   },
 
@@ -140,7 +137,8 @@ export default {
 
     getProfile() {
       this.loading = true;
-      this.$axios.get(`${ipBackendUser}profil`).then((res) => {
+
+      this.$axios.get(`${ipBackendUser}detailsById/${this.id}`).then((res) => {
         this.form = res.data.data[0];
         this.loading = false;
       });
@@ -162,7 +160,7 @@ export default {
           .post(`${ipBackendUser}update`, data)
           .then((res) => {
             alert("update  sukses");
-            this.$router.push({ path: "/" });
+            this.$router.push({ path: "/dashboard" });
           })
           .catch((error) => {
             console.log(error);

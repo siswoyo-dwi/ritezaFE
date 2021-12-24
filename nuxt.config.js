@@ -18,7 +18,7 @@ export default {
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [`@assets/css/bootstrap.min.css`],
-  js: [`@assets/js/bootstrap.min.js`],
+  js: [`@assets/js/bootstrap.min.js`,`@assets/js/popper.min.js`],
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ["~/plugins/axios.js"],
 

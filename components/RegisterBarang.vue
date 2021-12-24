@@ -12,6 +12,7 @@
         <b-form-input
           v-model="form.komisiBarang"
           placeholder="Komisi Barang"
+          description="**dalam %"
         ></b-form-input>
       </b-form-group>
 

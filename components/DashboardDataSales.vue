@@ -1,66 +1,34 @@
 <template>
-  <div class="container-fluid">
+  <div class="container">
     <b-spinner
-      class="container-fluid d-flex justify-content-center align-items-center"
+      class="d-flex justify-content-center align-items-center"
       v-if="loading"
       label="Loading..."
     ></b-spinner>
-    <div v-else>
-      <p class="pl-5">DASHBOARD</p>
-      <hr />
+    <div v-else class="d-flex justify-content-center align-items-center">
       <div>
         <b-row>
-          <div class="col-lg-4 col-md-6 my-3 col-sm-12">
-            <b-col>
-              <b-card
-                class="cardDashboard"
-                bg-variant="info"
-                text-variant="white"
-                title="Sales"
-                ><b-icon icon="person" class="icon-dashboard"></b-icon>
-                <b-card-text class="display-4">{{ sales }} </b-card-text>
-                <NuxtLink class="navbarLayoutDefault" to="/listsales">
-                  <b-card-text>
-                    List Sales
-                    <b-icon icon="chevron-double-right"></b-icon></b-card-text
-                ></NuxtLink>
-              </b-card>
+          <b-row>
+            <b-col class="col-10 my-3">
+              <b-form-input v-model="link" id="myInput"> </b-form-input>
             </b-col>
-          </div>
-          <div class="col-lg-4 col-md-6 my-3 col-sm-12">
-            <b-col
-              ><b-card
-                class="cardDashboard"
-                bg-variant="success"
-                text-variant="white"
-                title="Kategori"
-              >
-                <b-icon icon="layers" class="icon-dashboard"></b-icon>
-                <b-card-text class="display-4">{{ barang }}</b-card-text>
-                <NuxtLink to="/listdatabarang" class="navbarLayoutDefault">
-                  <b-card-text
-                    >List Kategori
-                    <b-icon icon="chevron-double-right"></b-icon></b-card-text
-                ></NuxtLink>
-              </b-card>
+            <b-col class="col-2 my-3">
+              <b-button variant="primary" @click="copy()">Copy</b-button>
             </b-col>
-          </div>
-          <div class="col-lg-4 col-md-6 my-3 col-sm-12">
+          </b-row>
+          <b-col class="col-3 my-3"></b-col>
+
+          <div class="col-6 my-3">
             <b-col
-              ><b-card
-                class="cardDashboard"
-                bg-variant="danger"
-                text-variant="white"
-                title="Pesanan"
-              >
-                <b-icon icon="cart4" class="icon-dashboard"></b-icon>
-                <b-card-text class="display-4">{{ sales }}</b-card-text>
+              ><b-card bg-variant="info" text-variant="white" title="Pesanan">
+                <b-card-text> Total Pesanan {{ sales }}</b-card-text>
                 <b-card-text
                   >List Pesanan
                   <b-icon icon="chevron-double-right"></b-icon>
                 </b-card-text>
               </b-card>
             </b-col>
+            <b-col class="col-3 my-3"></b-col>
           </div>
         </b-row>
       </div>
@@ -69,13 +37,7 @@
 </template>
 <script>
 import { ipBackendBarang, ipBackendUser } from "../assets/js/ipBeckEnd";
-import {
-  BIcon,
-  BIconChevronDoubleRight,
-  BIconPerson,
-  BIconLayers,
-  BIconCart4,
-} from "bootstrap-vue";
+import { BIcon, BIconChevronDoubleRight } from "bootstrap-vue";
 export default {
   data() {
     return {
@@ -88,15 +50,13 @@ export default {
   components: {
     BIcon,
     BIconChevronDoubleRight,
-    BIconPerson,
-    BIconLayers,
-    BIconCart4,
   },
 
   async created() {
     this.loading = true;
     await this.getTotalSales();
     await this.getTotalBarang();
+    await this.getLink();
     this.loading = false;
   },
   methods: {
@@ -128,6 +88,18 @@ export default {
         });
       }
     },
+    async getLink() {
+      await this.$axios.get(`${ipBackendUser}getLink`).then((link) => {
+        if (link.data.message !== "anda belum login") {
+          this.link =
+            `http://localhost:3000/` +
+            link.data.data.slice(22, link.data.data.length - 1);
+          this.loading = false;
+        } else {
+          this.$router.push({ path: "/" });
+        }
+      });
+    },
     async getTotalBarang() {
       this.id = localStorage.getItem("id");
       this.loading = true;
@@ -148,16 +120,5 @@ export default {
 <style scoped>
 .navbarLayoutDefault {
   text-decoration: none;
-  color: white;
-}
-.cardDashboard {
-  width: 18rem;
-}
-.icon-dashboard {
-  position: absolute;
-  z-index: 0;
-  right: 20px;
-  opacity: 0.4;
-  font-size: 100px;
 }
 </style>

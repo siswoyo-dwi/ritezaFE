@@ -1,16 +1,15 @@
 <template>
-  <Register />
+  <UpdateSales />
 </template>
 
 <script>
 export default {
   head() {
     return {
-      title: "register",
+      title: "update Sales",
     };
   },
-  name: "RegisterPage",
-    middleware: "index",
-
+  middleware: "index",
+  name: "updateSales",
 };
 </script>

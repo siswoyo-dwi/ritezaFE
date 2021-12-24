@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <b-form @submit="onSubmit">
+  <div class="container">
+    <b-spinner label="Spinning" v-if="loading"></b-spinner>
+
+    <b-form @submit="onSubmit" v-else>
       <b-form-group label="Nama Barang :">
         <b-form-input
           v-model="form.namaBarang"
@@ -41,20 +43,36 @@ import { ipBackendBarang } from "../assets/js/ipBeckEnd";
 export default {
   data() {
     return {
+      id: this.$route.params.id,
+      loading: false,
       form: {
         namaBarang: "",
         komisiBarang: "",
         keteranganBarang: "",
         file1: null,
-        tanggal:"",
+        tanggal: "",
       },
     };
   },
-  created(){
-      const tanggal = this.$moment(new Date)
-      console.log(tanggal);
+  async created() {
+    // const tanggal = this.$moment(new Date());
+    await this.getData();
   },
   methods: {
+    async getData() {
+      this.loading = true;
+      await this.$axios
+        .get(`${ipBackendBarang}detailsById/${this.id}`)
+        .then((res) => {
+          console.log(res);
+          this.form = res.data.data[0]
+          this.loading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.loading = false;
+        });
+    },
     async onSubmit(event) {
       event.preventDefault();
       let formData = new FormData();

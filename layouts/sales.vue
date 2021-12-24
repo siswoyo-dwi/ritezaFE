@@ -30,30 +30,20 @@
     <div class="test" :class="{ active: isActive }">
       <b-navbar class="navbarLayoutDefault">
         <b-icon icon="justify" @click="geser" v-b-toggle.sidebar-1></b-icon>
-        <b-icon icon="person-circle" class="ml-5" id="iconPerson"></b-icon>
-        <NuxtLink class="navbarLayoutDefault ml-5" to="/"
-          ><b-navbar-brand class="ml-2">Hi,</b-navbar-brand></NuxtLink
-        >
-         <NuxtLink class="navbarLayoutDefault ml-5" to="/register"
-          >Register Sales
+        <NuxtLink class="navbarLayoutDefault ml-5" to="/dashboardsalesid"
+          >Get Link
         </NuxtLink>
-        <NuxtLink class="navbarLayoutDefault ml-5" to="/listsales"
-          >List Sales
+        <NuxtLink class="navbarLayoutDefault ml-5" to="/salesupdateprofile"
+          >Update Profile
         </NuxtLink>
-       
-        <NuxtLink class="navbarLayoutDefault ml-5" to="/registerbarang"
-          >Register Barang
-        </NuxtLink>
-        <NuxtLink class="navbarLayoutDefault ml-5" to="/listdatabarang"
-          >List Barang
-        </NuxtLink>
+        <hr />
       </b-navbar>
       <Nuxt />
     </div>
   </div>
 </template>
 <script>
-import ListRouterSidebar from "../components/sidebar/listRouterSidebar.vue";
+import ListRouterSidebar from "../components/sidebar/salesListRouterSidebar.vue";
 import Company from "../components/sidebar/company.vue";
 import {
   BIcon,

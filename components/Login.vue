@@ -155,6 +155,7 @@ export default {
       const login = await this.$axios
         .post(`${ipBackendUser}login`, data)
         .then((res) => {
+          console.log(res.data);
           this.loading = false;
           if (res.data.token) {
             localStorage.setItem("token", res.data.token);
