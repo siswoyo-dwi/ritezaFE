@@ -164,6 +164,7 @@ export default {
           })
           .catch((error) => {
             console.log(error);
+            alert("update gagal")
           });
       } catch (error) {
         alert(error);

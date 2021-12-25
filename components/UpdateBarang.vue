@@ -65,7 +65,7 @@ export default {
         .get(`${ipBackendBarang}detailsById/${this.id}`)
         .then((res) => {
           console.log(res);
-          this.form = res.data.data[0]
+          this.form = res.data.data[0];
           this.loading = false;
         })
         .catch((err) => {
@@ -89,9 +89,18 @@ export default {
           })
           .then((res) => {
             console.log(res);
+            alert("update berhasil");
+            this.form = {
+              namaBarang: "",
+              komisiBarang: "",
+              keteranganBarang: "",
+              file1: null,
+              tanggal: "",
+            };
           })
           .catch((err) => {
             console.log(err);
+            alert("update gagal");
           });
       } catch (error) {}
       return { data };

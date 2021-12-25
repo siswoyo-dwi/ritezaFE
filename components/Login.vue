@@ -163,10 +163,12 @@ export default {
           }
           this.id = localStorage.getItem("id");
           if (this.id) {
+            alert("login berhasil");
             this.$router.push({ path: "dashboard" });
           }
         })
         .catch((error) => {
+          alert("login gagal");
           this.loading = false;
           this.showAlert();
         });

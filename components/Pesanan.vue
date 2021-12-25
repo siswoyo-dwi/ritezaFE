@@ -100,32 +100,51 @@
               <tr>
                 <td class="formPesanan">Pesanan</td>
                 <td class="text-right">:</td>
-                <td class="formInputLength  pl-3">
-                  <b-form-select
-                    v-model="pesanan"
-                    :options="options"
-                    size="sm"
-                    required
-                    class="formInput  mt-4"
-                  ></b-form-select>
-                  <!-- <b-row>
-                  <b-col class="col-10">
-                      <b-form-input
-                        class="formInput mt-4"
-                        size="sm"
-                        v-model="pesanan"
-                        required
-                      ></b-form-input>
-                    </b-col>
-                    <b-col class="col-2" >
+                <td class="formInputLength pl-3">
+                  <b-row>
+                    <b-col class="col-6" v-if="kategoriProduk">
                       <b-form-select
                         v-model="pesanan"
-                        :options="options"
+                        :options="barang"
                         size="sm"
                         class="formInput mt-4"
-                      ></b-form-select>
+                      >
+                        <template #first>
+                          <b-form-select-option :value="null" disabled
+                            >-- Silahkan Pilih Produk --</b-form-select-option
+                          >
+                        </template>
+                      </b-form-select>
                     </b-col>
-                  </b-row> -->
+                    <b-col class="col-6" v-else>
+                      <b-form-select
+                        v-model="pesanan"
+                        :options="barang"
+                        size="sm"
+                        class="formInput mt-4"
+                      >
+                        <template #first>
+                          <b-form-select-option :value="null" disabled
+                            >-- Silahkan Pilih Produk --</b-form-select-option
+                          >
+                        </template>
+                      </b-form-select>
+                    </b-col>
+                    <b-col class="col-6">
+                      <b-form-select
+                        v-model="kategoriProduk"
+                        :options="kategori"
+                        size="sm"
+                        class="formInput mt-4"
+                      >
+                        <template #first>
+                          <b-form-select-option :value="null" disabled
+                            >-- Silahkan Pilih Kategori --</b-form-select-option
+                          >
+                        </template>
+                      </b-form-select>
+                    </b-col>
+                  </b-row>
                 </td>
               </tr>
             </table>
@@ -140,6 +159,7 @@ import {
   ipBackendBarang,
   ipBackend,
   ipBackendPesanan,
+  ipBackendKategori,
 } from "../assets/js/ipBeckEnd";
 import { BIcon, BIconTriangleFill } from "bootstrap-vue";
 
@@ -164,38 +184,79 @@ export default {
       ipBackend: ipBackend,
       loading: false,
       options: [],
+      barang: [],
+      kategoriProduk: "",
+      kategoriId: "",
+      kategori: [],
+      listKategori: "",
+      listPesanan: [],
+      pesanan: "",
+      pesananId: "",
     };
   },
   async created() {
     this.loading = true;
-    await this.getDataBarang();
+    // await this.getDataBarang();
+    await this.getKategori();
     this.loading = false;
   },
   watch: {
+    async kategoriProduk(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.barang = [];
+        this.loading = true;
+        for (let i = 0; i < this.listKategori.length; i++) {
+          if (this.listKategori[i].namaKategori === this.kategoriProduk) {
+            this.kategoriId = this.listKategori[i].id;
+          }
+        }
+        await this.$axios
+          .get(`${ipBackendBarang}listByKategori/${this.kategoriId}`)
+          .then((res) => {
+            this.listPesanan = res.data.data;
+            for (let i = 0; i < this.listPesanan.length; i++) {
+              this.barang.push(this.listPesanan[i].namaBarang);
+            }
+          });
+        this.loading = false;
+      }
+    },
     async pesanan(newValue, oldValue) {
       if (newValue !== oldValue) {
-        console.log(this.lists);
-
-        for (let i = 0; i < this.options.length; i++) {
-          if (this.lists[i].namaBarang == this.pesanan) {
-            this.pic = this.lists[i].gambarBarang;
+        for (let i = 0; i < this.listPesanan.length; i++) {
+          console.log(this.listPesanan[i]);
+          if (this.listPesanan[i].namaBarang == this.pesanan) {
+            this.pic = this.listPesanan[i].gambarBarang;
             this.tanggalPesan = this.$moment(new Date());
-            console.log(this.tanggalPesan);
-            this.komisiPesanan = this.lists[i].komisiBarang;
-            this.masterBarangId = this.lists[i].id;
+            this.komisiPesanan = this.listPesanan[i].komisiBarang;
+            this.masterBarangId = this.listPesanan[i].masterBarangId;
+            console.log(
+              this.tanggalPesan,
+              this.komisiPesanan,
+              this.masterBarangId
+            );
           }
         }
       }
     },
   },
   methods: {
+    async getKategori() {
+      this.loading = true;
+      await this.$axios.get(`${ipBackendKategori}listAll`).then((list) => {
+        this.listKategori = list.data.data;
+        for (let i = 0; i < this.listKategori.length; i++) {
+          this.kategori.push(this.listKategori[i].namaKategori);
+        }
+      });
+      this.loading = false;
+    },
     async getDataBarang() {
       this.loading = true;
 
       await this.$axios.get(`${ipBackendBarang}listAll`).then((list) => {
         this.lists = list.data.data;
         for (let i = 0; i < this.lists.length; i++) {
-          console.log(this.lists[i].namaBarang);
           this.options.push(this.lists[i].namaBarang);
         }
       });
@@ -212,22 +273,29 @@ export default {
         masterBarangId: this.masterBarangId,
         userId: this.userId,
       };
-      console.log(data);
       if (
         this.namaPemesan !== "" &&
         this.alamatPemesan !== "" &&
         this.noHPPemesan !== "" &&
         this.NIKPemesan !== "" &&
-        this.tanggalPesan !== "" &&
-        this.komisiPesanan !== "" &&
-        this.masterBarangId !== ""
+        this.kategoriProduk !== "" &&
+        this.pesanan !== ""
       ) {
         this.loading = true;
-        console.log(this.id);
+        console.log(data);
         await this.$axios
-          .post(`${ipBackendPesanan}${this.userId}`, data)
+          .post(`${ipBackendPesanan}order/${this.userId}`, data)
           .then((list) => {
-            console.log(list);
+            this.pic="";
+            this.namaPemesan = "";
+            this.alamatPemesan = "";
+            this.noHPPemesan = "";
+            this.NIKPemesan = "";
+            this.tanggalPesan = "";
+            this.komisiPesanan = "";
+            this.masterBarangId = "";
+            this.userId = "";
+            alert("Transaksi akan di proses mohon di tunggu ...");
           });
         this.loading = false;
       } else {

@@ -7,7 +7,13 @@
           placeholder="Nama Barang"
         ></b-form-input>
       </b-form-group>
-
+      <b-form-group label="kategori Barang :">
+        <b-form-select
+          v-model="kategoriId"
+          :options="kategoriBarang"
+          size="sm"
+        ></b-form-select>
+      </b-form-group>
       <b-form-group label="Komisi Barang :">
         <b-form-input
           v-model="form.komisiBarang"
@@ -41,7 +47,7 @@
 </template>
 
 <script>
-import { ipBackendBarang } from "../assets/js/ipBeckEnd";
+import { ipBackendBarang, ipBackendKategori } from "../assets/js/ipBeckEnd";
 
 export default {
   data() {
@@ -49,17 +55,42 @@ export default {
       form: {
         namaBarang: "",
         komisiBarang: "",
+        kategoriBarangId: "",
         keteranganBarang: "",
         file1: null,
         tanggal: "",
       },
+      kategoriBarang: [],
+      kategori: [],
+      kategoriId: "",
     };
   },
-  created() {
-    const tanggal = this.$moment(new Date());
-    console.log(tanggal);
+  async created() {
+    this.loading = true;
+    await this.getKategoriBarang();
+    this.loading = false;
+  },
+
+  watch: {
+    kategoriId(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        for (let i = 0; i < this.kategori.length; i++) {
+          if (this.kategoriId == this.kategori[i].namaKategori) {
+            this.form.kategoriBarangId = this.kategori[i].id;
+          }
+        }
+      }
+    },
   },
   methods: {
+    async getKategoriBarang() {
+      await this.$axios.get(`${ipBackendKategori}listAll`).then((list) => {
+        this.kategori = list.data.data;
+        for (let i = 0; i < list.data.data.length; i++) {
+          this.kategoriBarang.push(list.data.data[i].namaKategori);
+        }
+      });
+    },
     async upload(event) {
       this.form.file1 = await this.$refs.file.files[0];
     },
@@ -67,6 +98,7 @@ export default {
       event.preventDefault();
       let formData = new FormData();
       formData.append("file1", this.form.file1);
+      formData.append("kategoriBarangId", this.form.kategoriBarangId);
       formData.append("namaBarang", this.form.namaBarang);
       formData.append("komisiBarang", this.form.komisiBarang);
       formData.append("keteranganBarang", this.form.keteranganBarang);
@@ -79,6 +111,12 @@ export default {
           })
           .then((res) => {
             console.log(res);
+            this.form.file1 = "";
+            this.form.kategoriBarangId = "";
+            this.form.namaBarang = "";
+            this.form.komisiBarang = "";
+            this.form.keteranganBarang = "";
+            alert("registrasi berhasil");
           })
           .catch((err) => {
             console.log(err);
