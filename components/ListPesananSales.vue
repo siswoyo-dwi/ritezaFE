@@ -38,15 +38,6 @@
           </b-input-group>
         </b-col>
         <b-col>
-          <label>Sales</label>
-
-          <b-form-select v-model="sales" :options="options1" size="sm">
-            <template #first>
-              <b-form-select-option :value="null">sales</b-form-select-option>
-            </template>
-          </b-form-select>
-        </b-col>
-        <b-col>
           <label>Pemesan</label>
 
           <b-form-select v-model="pemesan" :options="options2" size="sm">
@@ -86,16 +77,6 @@
         :per-page="perPage"
         :current-page="currentPage"
       >
-        <template #cell(update)="row">
-          <b-button
-            size="sm"
-            variant="outline-primary"
-            @dblclick="update(row)"
-            class="mr-2"
-          >
-            <b-icon icon="pencil"></b-icon>
-          </b-button>
-        </template>
       </b-table>
       <b-pagination
         v-model="currentPage"
@@ -137,7 +118,7 @@ export default {
       pemesan: null,
       produk: null,
       produkId: null,
-
+      id:localStorage.getItem('id'),
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
@@ -149,7 +130,6 @@ export default {
         { key: "komisi" },
         { key: "harga" },
         { key: "status" },
-        { key: "update" },
       ],
       items: [],
       options1: [],
@@ -161,21 +141,10 @@ export default {
     this.loading = true;
     await this.getPesanan();
     await this.getDataBarang();
-    await this.getDataSales();
 
     this.loading = false;
   },
   methods: {
-    async getDataSales() {
-      this.loading = true;
-      await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
-        this.dataSales = list.data.data;
-        for (let i = 0; i < this.dataSales.length; i++) {
-          this.options1.push(this.dataSales[i].username);
-        }
-        this.loading = false;
-      });
-    },
     async getDataBarang() {
       this.loading = true;
 
@@ -191,7 +160,7 @@ export default {
     async getPesanan() {
       this.loading = true;
 
-      await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
+      await this.$axios.get(`${ipBackendPesanan}listByUserId/${this.id}`).then((list) => {
         if (list.data.data.length > 0) {
           console.log(list.data.data);
 

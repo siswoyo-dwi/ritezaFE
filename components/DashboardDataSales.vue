@@ -21,11 +21,13 @@
           <div class="col-6 my-3">
             <b-col
               ><b-card bg-variant="info" text-variant="white" title="Pesanan">
-                <b-card-text> Total Pesanan {{ sales }}</b-card-text>
-                <b-card-text
-                  >List Pesanan
-                  <b-icon icon="chevron-double-right"></b-icon>
-                </b-card-text>
+                <b-card-text> Total Pesanan {{ pesanan }}</b-card-text>
+                <NuxtLink to="/listpesanansales" class="navbarLayoutDefault">
+                  <b-card-text
+                    >List Pesanan
+                    <b-icon icon="chevron-double-right"></b-icon>
+                  </b-card-text>
+                </NuxtLink>
               </b-card>
             </b-col>
             <b-col class="col-3 my-3"></b-col>
@@ -36,15 +38,16 @@
   </div>
 </template>
 <script>
-import { ipBackendBarang, ipBackendUser } from "../assets/js/ipBeckEnd";
+import { ipBackendPesanan, ipBackendUser } from "../assets/js/ipBeckEnd";
 import { BIcon, BIconChevronDoubleRight } from "bootstrap-vue";
 export default {
   data() {
     return {
       loading: false,
-      sales: null,
+      pesanan: null,
       barang: null,
       link: null,
+      id:localStorage.getItem('id')
     };
   },
   components: {
@@ -54,12 +57,24 @@ export default {
 
   async created() {
     this.loading = true;
-    await this.getTotalSales();
-    await this.getTotalBarang();
+    await this.getPesanan();
     await this.getLink();
     this.loading = false;
   },
   methods: {
+     async getPesanan() {
+      this.loading = true;
+
+      await this.$axios.get(`${ipBackendPesanan}listByUserId/${this.id}`).then((list) => {
+        if (list.data.message !== "anda belum login") {
+          this.pesanan = list.data.data.length;
+          this.loading = false;
+        } else {
+          this.$router.push({ path: "/" });
+        }
+      });
+      this.loading = false;
+    },
     async copy() {
       /* Get the text field */
       const copyText = document.getElementById("myInput");
@@ -74,20 +89,6 @@ export default {
       /* Alert the copied text */
       alert("Copied");
     },
-    async getTotalSales() {
-      this.id = localStorage.getItem("id");
-      this.loading = true;
-      if (this.id) {
-        await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
-          if (list.data.message !== "anda belum login") {
-            this.sales = list.data.data.length;
-            this.loading = false;
-          } else {
-            this.$router.push({ path: "/" });
-          }
-        });
-      }
-    },
     async getLink() {
       await this.$axios.get(`${ipBackendUser}getLink`).then((link) => {
         if (link.data.message !== "anda belum login") {
@@ -100,25 +101,12 @@ export default {
         }
       });
     },
-    async getTotalBarang() {
-      this.id = localStorage.getItem("id");
-      this.loading = true;
-      if (this.id) {
-        await this.$axios.get(`${ipBackendBarang}listAll`).then((list) => {
-          if (list.data.message !== "anda belum login") {
-            this.barang = list.data.data.length;
-            this.loading = false;
-          } else {
-            this.$router.push({ path: "/" });
-          }
-        });
-      }
-    },
   },
 };
 </script>
 <style scoped>
 .navbarLayoutDefault {
   text-decoration: none;
+  color: white;
 }
 </style>

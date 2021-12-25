@@ -9,7 +9,7 @@ export default {
       title: "update profile",
     };
   },
-  middleware: "index",
+  middleware: "sales",
   layout:"sales",
   name: "updateProfile",
 };

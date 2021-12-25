@@ -10,7 +10,6 @@ export default {
     };
   },
   name: "Register-Barang",
-    middleware: "index",
-
+  middleware: "index",
 };
 </script>

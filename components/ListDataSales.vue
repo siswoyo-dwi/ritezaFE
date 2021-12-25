@@ -17,6 +17,8 @@
         <b-button
           v-model="status"
           size="sm"
+          :per-page="perPage"
+          :current-page="currentPage"
           variant="outline-primary"
           @dblclick="cancel(row)"
           class="mr-2"
@@ -25,6 +27,12 @@
         </b-button>
       </template>
     </b-table>
+    <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+    ></b-pagination>
   </div>
 </template>
 
@@ -37,13 +45,20 @@ export default {
     BIconPencil,
     BIconTrash,
   },
+  computed: {
+    rows() {
+      return this.items.length;
+    },
+  },
   data() {
     return {
+      perPage: 10,
+      currentPage: 1,
       status: 0,
       items: [],
       loading: false,
       fields: [
-        { key: "nomor"},
+        { key: "nomor" },
         { key: "nama", sortable: false },
         { key: "noHp", sortable: false },
         { key: "jenisKelamin", sortable: false },
@@ -74,7 +89,7 @@ export default {
         if (list.data.data.length > 0) {
           this.items = list.data.data;
           for (let i = 0; i < this.items.length; i++) {
-            this.items[i].nomor =i+1
+            this.items[i].nomor = i + 1;
           }
         } else {
           this.items = [{ nama: "-", noHp: "-", jenisKelamin: "-" }];

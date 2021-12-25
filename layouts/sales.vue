@@ -36,6 +36,9 @@
         <NuxtLink class="navbarLayoutDefault ml-5" to="/salesupdateprofile"
           >Update Profile
         </NuxtLink>
+         <NuxtLink class="navbarLayoutDefault ml-3" to="/"
+          ><div  @click="logout()">Logout</div> 
+        </NuxtLink>
         <hr />
       </b-navbar>
       <Nuxt />
@@ -66,6 +69,9 @@ export default {
     };
   },
   methods: {
+    logout() {
+      localStorage.clear();
+    },
     geser() {
       if (this.isActive) {
         this.isActive = false;

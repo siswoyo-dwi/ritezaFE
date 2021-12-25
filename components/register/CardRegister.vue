@@ -59,7 +59,7 @@
   </b-card>
 </template>
 <script>
-import  axios  from "axios";
+import axios from "axios";
 import { ipBackendUser } from "../../assets/js/ipBeckEnd";
 
 export default {
@@ -81,18 +81,15 @@ export default {
       };
       // this.$store
       //   .dispatch("register", data)
-      const reg = await axios
+      await this.$axios
         .post(`${ipBackendUser}/register`, data)
         .then((response) => {
-          this.$router.push({
-            name: "/",
-          });
+          this.$router.push("/dashboard");
           return response.data;
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
         });
-      return { reg };
     },
   },
 };
@@ -101,7 +98,7 @@ export default {
 .cardLogin {
   width: 50vw;
 }
-.cardLogin p{
+.cardLogin p {
   font-size: 30px;
   font-weight: 900;
   color: gray;

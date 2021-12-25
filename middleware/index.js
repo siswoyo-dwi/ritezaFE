@@ -1,7 +1,9 @@
-export default function(context){
-   const user =  localStorage.getItem("token")
-   if(!user){
-       context.redirect('/')
-    // this.$router.push({ path: "/" });
-   }
+export default function (context) {
+  const user = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  if (!user) {
+    context.redirect("/");
+  } else if (role == 'sales') {
+    context.redirect("/dashboardsalesid");
+  }
 }

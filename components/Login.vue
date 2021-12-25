@@ -160,6 +160,7 @@ export default {
           if (res.data.token) {
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("id", res.data.id);
+            localStorage.setItem("role", res.data.role);
           }
           this.id = localStorage.getItem("id");
           if (this.id) {

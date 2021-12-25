@@ -10,7 +10,6 @@ export default {
     };
   },
   name: "RegisterPage",
-    middleware: "index",
-
+  middleware: "index",
 };
 </script>

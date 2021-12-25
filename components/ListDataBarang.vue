@@ -17,6 +17,8 @@
         <b-button
           v-model="status"
           size="sm"
+          :per-page="perPage"
+          :current-page="currentPage"
           variant="outline-primary"
           @dblclick="cancel(row)"
           class="mr-2"
@@ -25,6 +27,12 @@
         </b-button>
       </template>
     </b-table>
+    <b-pagination
+      v-model="currentPage"
+      :total-rows="rows"
+      :per-page="perPage"
+      aria-controls="my-table"
+    ></b-pagination>
   </div>
 </template>
 
@@ -38,8 +46,15 @@ export default {
     BIconPencil,
     BIconTrash,
   },
+  computed: {
+    rows() {
+      return this.items.length;
+    },
+  },
   data() {
     return {
+      perPage: 10,
+      currentPage: 1,
       status: 0,
       items: [],
       loading: false,

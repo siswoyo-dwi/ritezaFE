@@ -54,11 +54,13 @@
                 title="Pesanan"
               >
                 <b-icon icon="cart4" class="icon-dashboard"></b-icon>
-                <b-card-text class="display-4">{{ sales }}</b-card-text>
-                <b-card-text
-                  >List Pesanan
-                  <b-icon icon="chevron-double-right"></b-icon>
-                </b-card-text>
+                <b-card-text class="display-4">{{ pesanan }}</b-card-text>
+                <NuxtLink to="/listpesanan" class="navbarLayoutDefault">
+                  <b-card-text
+                    >List Pesanan
+                    <b-icon icon="chevron-double-right"></b-icon>
+                  </b-card-text>
+                </NuxtLink>
               </b-card>
             </b-col>
           </div>
@@ -68,7 +70,11 @@
   </div>
 </template>
 <script>
-import { ipBackendBarang, ipBackendUser } from "../assets/js/ipBeckEnd";
+import {
+  ipBackendBarang,
+  ipBackendUser,
+  ipBackendPesanan,
+} from "../assets/js/ipBeckEnd";
 import {
   BIcon,
   BIconChevronDoubleRight,
@@ -82,6 +88,7 @@ export default {
       loading: false,
       sales: null,
       barang: null,
+      pesanan: null,
       link: null,
     };
   },
@@ -96,6 +103,7 @@ export default {
   async created() {
     this.loading = true;
     await this.getTotalSales();
+    await this.getPesanan();
     await this.getTotalBarang();
     this.loading = false;
   },
@@ -127,6 +135,20 @@ export default {
           }
         });
       }
+    },
+    async getPesanan() {
+      this.loading = true;
+
+      await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
+        console.log(list);
+        if (list.data.message !== "anda belum login") {
+          this.pesanan = list.data.data.length;
+          this.loading = false;
+        } else {
+          this.$router.push({ path: "/" });
+        }
+      });
+      this.loading = false;
     },
     async getTotalBarang() {
       this.id = localStorage.getItem("id");

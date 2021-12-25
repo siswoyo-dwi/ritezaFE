@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  middleware:'index',
+  middleware:'sales',
   layout:'sales',
   name: "DashboardSales",
 };

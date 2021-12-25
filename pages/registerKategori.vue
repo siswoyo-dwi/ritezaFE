@@ -10,7 +10,6 @@ export default {
     };
   },
   name: "Register-Kategori",
-    middleware: "index",
-
+  middleware: "index",
 };
 </script>
