@@ -36,6 +36,9 @@
         <NuxtLink class="navbarLayoutDefault ml-5" to="/salesupdateprofile"
           >Update Profile
         </NuxtLink>
+        <NuxtLink class="navbarLayoutDefault ml-5" to="/gantipassword"
+          >Ganti Password
+        </NuxtLink>
          <NuxtLink class="navbarLayoutDefault ml-3" to="/"
           ><div  @click="logout()">Logout</div> 
         </NuxtLink>

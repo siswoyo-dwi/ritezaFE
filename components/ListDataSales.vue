@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <b-spinner v-if="loading" label="Spinning"></b-spinner>
-    <b-table striped hover class="text-center" :items="items" :fields="fields">
+    <b-table bordered class="text-center" :items="items" :fields="fields">
       <template #cell(update)="row">
         <b-button
           size="sm"
@@ -24,6 +24,19 @@
           class="mr-2"
         >
           <b-icon icon="trash"></b-icon>
+        </b-button>
+      </template>
+      <template #cell(ganti_PW)="row">
+        <b-button
+          v-model="status"
+          size="sm"
+          :per-page="perPage"
+          :current-page="currentPage"
+          variant="outline-primary"
+          @dblclick="goTo(row)"
+          class="mr-2"
+        >
+          <b-icon icon="pencil"></b-icon>
         </b-button>
       </template>
     </b-table>
@@ -58,12 +71,13 @@ export default {
       items: [],
       loading: false,
       fields: [
-        { key: "nomor" },
-        { key: "nama", sortable: false },
-        { key: "noHp", sortable: false },
-        { key: "jenisKelamin", sortable: false },
-        { key: "update" },
-        { key: "delete" },
+        { key: "nomor", thClass: "bg-info text-light" },
+        { key: "username", sortable: false, thClass: "bg-info text-light" },
+        { key: "noHp", sortable: false, thClass: "bg-info text-light" },
+        { key: "jenisKelamin", sortable: false, thClass: "bg-info text-light" },
+        { key: "update", thClass: "bg-info text-light" },
+        { key: "delete", thClass: "bg-info text-light" },
+        { key: "ganti_PW", thClass: "bg-info text-light" },
       ],
     };
   },
@@ -100,26 +114,33 @@ export default {
     async update(index) {
       console.log(index);
       const id = index.item.id;
-      this.$router.push({ path: `update/sales/${id}` });
+      this.$router.push(`update/sales/${id}`);
+    },
+    async goTo(index) {
+      console.log(index);
+      const id = index.item.id;
+      this.$router.push(`update/password/${id}`);
     },
     async cancel(index) {
       console.log(index);
-      const id = index.item.id;
-      await this.$axios
-        .post(`${ipBackendUser}delete`, {
-          id: id,
-        })
-        .then((res) => {
-          console.log(res.data.message);
-          if (this.status == 0) {
-            this.status = 1;
-          } else {
-            this.status = 0;
-          }
-        })
-        .catch((err) => {
-          console.log(err.data.message);
-        });
+      if (confirm("Apakah anda yakin menghapus sales ini ?") == true) {
+        const id = index.item.id;
+        await this.$axios
+          .post(`${ipBackendUser}delete`, {
+            id: id,
+          })
+          .then((res) => {
+            console.log(res.data.message);
+            if (this.status == 0) {
+              this.status = 1;
+            } else {
+              this.status = 0;
+            }
+          })
+          .catch((err) => {
+            console.log(err.data.message);
+          });
+      }
     },
   },
 };

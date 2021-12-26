@@ -21,13 +21,10 @@ export default {
         username: this.form.username,
         password: this.form.password,
       };
-      // this.$store
-      //   .dispatch("login",data )
       const login = await axios
         .post(`${ipBackendUser}/login`, data)
         .then((res) => {
           this.loading = false;
-          // axios.defaults.headers.common["token"] = res.data.token;
           if (res.data.token) {
             localStorage.setItem("token", res.data.token);
           }

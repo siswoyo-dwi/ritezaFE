@@ -25,7 +25,7 @@
     <div class="row d-flex justify-content-center align-items-center" v-else>
       <div class="col-md-6">
         <b-form @submit="onSubmit">
-          <b-form-input
+          <!-- <b-form-input
             label="nama"
             laber-for="input-3"
             v-model="form.nama"
@@ -40,7 +40,7 @@
             type="number"
             placeholder="Input nomor KTP"
             class="mb-2"
-          ></b-form-input>
+          ></b-form-input> -->
           <b-form-input
             id="form-alamat"
             label="alamat"
@@ -58,11 +58,6 @@
             placeholder="Input nomor HP"
             class="mb-2"
           ></b-form-input>
-          <b-form-select
-            class="mb-2"
-            v-model="form.jenisKelamin"
-            :options="options"
-          ></b-form-select>
           <b-button type="submit" block variant="primary">Submit</b-button>
         </b-form>
       </div>

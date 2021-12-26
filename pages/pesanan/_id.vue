@@ -1,5 +1,5 @@
 <template>
-  <Pesanan />
+  <Pesanan2 />
 </template>
 <script>
 export default {

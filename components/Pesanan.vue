@@ -16,7 +16,7 @@
     <div>
       <template>
         <b-row style="margin: 0">
-          <b-col class="col-lg-6">
+          <b-col class="col-lg-6 col-sm-12">
             <b-img
               v-if="pic"
               class="foto mt-3"
@@ -47,7 +47,7 @@
               >Pesan Sekarang</b-button
             >
           </b-col>
-          <b-col class="col-lg-6">
+          <b-col class="col-lg-6 col-sm-12">
             <table class="font-weight text-primary">
               <tr>
                 <td class="formPesanan">Nama</td>
@@ -295,7 +295,7 @@ export default {
             this.komisiPesanan = "";
             this.masterBarangId = "";
             this.userId = "";
-            alert("Transaksi akan di proses mohon di tunggu ...");
+            alert("terima kasih telah melakukan pesanan \nanda akan di hubungi oleh administari kami");
           });
         this.loading = false;
       } else {
@@ -307,11 +307,13 @@ export default {
 </script>
 <style scoped>
 #bg-pesanan {
-  background: #9abffa;
-  height: 100vh;
+  height: 135vh;
   width: 100vw;
   padding: 0;
   margin: 0;
+}
+.container-fluid {
+  background-color: lightblue;
 }
 .button-pesanan {
   font-size: 4vw;

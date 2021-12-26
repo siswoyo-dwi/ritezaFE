@@ -30,11 +30,20 @@
     <div class="test" :class="{ active: isActive }">
       <b-navbar class="navbarLayoutDefault">
         <b-icon icon="justify" @click="geser" v-b-toggle.sidebar-1></b-icon>
-        <b-icon icon="person-circle" class="ml-3" id="iconPerson"></b-icon>
+        <NuxtLink class="navbarLayoutDefault ml-3" to="/">
+          <b-icon
+            icon="person-circle"
+            variant="primary"
+            class="ml-3"
+            id="iconPerson"
+          ></b-icon>
+        </NuxtLink>
+
+        <h6><b-badge variant="danger">{{pesananBaru}}</b-badge></h6>
         <!-- <NuxtLink class="navbarLayoutDefault ml-3" to="/"
           ><b-navbar-brand class="ml-2">Hi,</b-navbar-brand></NuxtLink
         > -->
-        <NuxtLink class="navbarLayoutDefault ml-3" to="/register"
+        <NuxtLink class="navbarLayoutDefault ml-5" to="/register"
           >Register Sales
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listsales"
@@ -47,46 +56,15 @@
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listdatabarang"
           >List Barang
         </NuxtLink>
-          <NuxtLink class="navbarLayoutDefault ml-3" to="/registerkategori"
+        <NuxtLink class="navbarLayoutDefault ml-3" to="/registerkategori"
           >Register Kategori
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listpesanan"
           >List Pesanan
-        </NuxtLink>
-        <!-- <b-nav-form class="ml-3">
-          <b-form-input
-            size="sm"
-            class="mr-sm-2"
-            v-model="search"
-            placeholder="Search"
-          ></b-form-input>
-          <NuxtLink :to="`/search/${search}`">
-            <b-button
-              size="sm"
-              class="my-2 my-sm-0"
-              type="submit"
-              variant="primary"
-              >Search</b-button
-            ></NuxtLink
-          >
-        </b-nav-form>
-
-        <b-icon
-          icon="bell-fill"
-          class="ml-3 iconHeader"
-          variant="primary"
-        ></b-icon>
-        <h6>
-          <b-badge class="badge"
-            >9 <span class="sr-only">unread messages</span></b-badge
-          >
-        </h6> -->
+        </NuxtLink>  
         <NuxtLink class="navbarLayoutDefault ml-3" to="/"
-          ><div  @click="logout()">Logout</div> 
+          ><div @click="logout()">Logout</div>
         </NuxtLink>
-        <!-- <b-button variant="outline-info" class="mb-2">
-          <b-icon icon="power" aria-hidden="true"></b-icon> Logout
-        </b-button> -->
       </b-navbar>
       <Nuxt />
     </div>
@@ -94,6 +72,7 @@
 </template>
 <script>
 import ListRouterSidebar from "../components/sidebar/listRouterSidebar.vue";
+import { ipBackendPesanan } from "../assets/js/ipBeckEnd";
 import Company from "../components/sidebar/company.vue";
 import {
   BIcon,
@@ -116,9 +95,20 @@ export default {
     return {
       isActive: false,
       search: "",
+      pesananBaru: "",
     };
   },
+  created() {
+    this.getPesananBaru();
+  },
   methods: {
+    async getPesananBaru() {
+      await this.$axios
+        .get(`${ipBackendPesanan}jumlahByStatus/0`)
+        .then((res) => {
+         this.pesananBaru= res.data.data[0].count
+        });
+    },
     logout() {
       localStorage.clear();
     },
@@ -149,6 +139,8 @@ export default {
 }
 .navbarLayoutDefault {
   text-decoration: none;
+  font-weight: 800;
+  font-size: 20px;
 }
 .test.active {
   margin-left: 200px;

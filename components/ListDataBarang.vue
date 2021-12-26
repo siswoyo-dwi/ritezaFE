@@ -1,7 +1,14 @@
 <template>
   <div class="container">
     <b-spinner v-if="loading" label="Spinning"></b-spinner>
-    <b-table striped hover class="text-center" :items="items" :fields="fields">
+    <b-table
+      bordered
+      class="text-center"
+      :per-page="perPage"
+      :current-page="currentPage"
+      :items="items"
+      :fields="fields"
+    >
       <template #cell(update)="row">
         <b-button
           size="sm"
@@ -59,12 +66,16 @@ export default {
       items: [],
       loading: false,
       fields: [
-        { key: "nomor" },
-        { key: "namaBarang", sortable: true },
-        { key: "keteranganBarang", sortable: true },
-        { key: "komisiBarang", sortable: true },
-        { key: "update" },
-        { key: "delete" },
+        { key: "nomor", thClass: "bg-info text-light" },
+        { key: "namaBarang", sortable: true, thClass: "bg-info text-light" },
+        {
+          key: "keteranganBarang",
+          sortable: true,
+          thClass: "bg-info text-light",
+        },
+        { key: "komisiBarang", sortable: true, thClass: "bg-info text-light" },
+        { key: "update", thClass: "bg-info text-light" },
+        { key: "delete", thClass: "bg-info text-light" },
       ],
     };
   },
@@ -92,37 +103,35 @@ export default {
           for (let i = 0; i < this.items.length; i++) {
             this.items[i].nomor = i + 1;
           }
-        } else {
-          this.items = [
-            { namaBarang: "-", keteranganBarang: "-", komisiBarang: "-" },
-          ];
         }
+
         this.loading = false;
       });
     },
     async update(index) {
       console.log(index);
-      const id = index.item.id;
+      const id = index.item.masterBarangId;
       this.$router.push({ path: `update/barang/${id}` });
     },
     async cancel(index) {
-      console.log(index);
-      const id = index.item.id;
-      await this.$axios
-        .post(`${ipBackendBarang}delete`, {
-          id: id,
-        })
-        .then((res) => {
-          console.log(res.data.message);
-          if (this.status == 0) {
-            this.status = 1;
-          } else {
-            this.status = 0;
-          }
-        })
-        .catch((err) => {
-          console.log(err.data.message);
-        });
+      if (confirm("Apakah anda yakin menghapus barang ini ?") == true) {
+        const id = index.item.id;
+        await this.$axios
+          .post(`${ipBackendBarang}delete`, {
+            id: id,
+          })
+          .then((res) => {
+            console.log(res.data.message);
+            if (this.status == 0) {
+              this.status = 1;
+            } else {
+              this.status = 0;
+            }
+          })
+          .catch((err) => {
+            console.log(err.data.message);
+          });
+      }
     },
   },
 };

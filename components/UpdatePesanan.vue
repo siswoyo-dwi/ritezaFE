@@ -1,11 +1,12 @@
 <template>
   <div class="container">
-    <b-form @submit="onSubmit" class="mt-5">
+    <b-form @submit="onSubmit()" class="mt-5">
       <b-row>
         <b-col>
           <b-form-group label="Harga Barang">
             <b-form-input
               v-model="hargaBarang"
+              type="number"
               placeholder="Harga Barang"
               required
             ></b-form-input>
@@ -48,18 +49,22 @@ export default {
   methods: {
     async onSubmit() {
       const data = {
-        hargaBarang: +this.hargaBarang,
+        hargaBarang: this.hargaBarang,
         statusPesanan: this.statusPesanan,
         id: this.id,
       };
-      await this.$axios
-        .post(`${ipBackendPesanan}update`, data)
-        .then((res) => {
-          alert("update  sukses");
-        })
-        .catch((err) => {
-          alert("update  gagal");
-        });
+      if (data) {
+        await this.$axios
+          .post(`${ipBackendPesanan}update`, data)
+          .then((res) => {
+            this.$router.push({ path: "/dashboard" });
+            alert(res.data.message);
+          })
+          .catch((err) => {
+            console.log(err);
+            alert("update  gagal");
+          });
+      }
     },
   },
 };

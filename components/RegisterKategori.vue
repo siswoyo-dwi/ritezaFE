@@ -17,12 +17,15 @@ export default {
   methods: {
     async onSubmit() {
       console.log(this.namaKategori);
-      await this.$axios.post(`${ipBackendKategori}register`, {
-        namaKategori: this.namaKategori,
-      }).then(()=>{
-        this.namaKategori = ""
-        alert("registrasi berhasil")
-      })
+      await this.$axios
+        .post(`${ipBackendKategori}register`, {
+          namaKategori: this.namaKategori,
+        })
+        .then(() => {
+          this.namaKategori = "";
+          alert("registrasi berhasil");
+          this.$router.push("/dashboard");
+        });
     },
   },
 };

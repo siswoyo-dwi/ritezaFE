@@ -26,22 +26,6 @@
       <div class="col-md-6">
         <b-form @submit="onSubmit">
           <b-form-input
-            label="nama"
-            laber-for="input-3"
-            v-model="form.nama"
-            placeholder="Input nama"
-            class="mb-2"
-          ></b-form-input>
-          <b-form-input
-            id="form-nomorKTP"
-            label="nomorKTP"
-            laber-for="input-nomorKTP"
-            v-model="form.nomorKTP"
-            type="number"
-            placeholder="Input nomor KTP"
-            class="mb-2"
-          ></b-form-input>
-          <b-form-input
             id="form-alamat"
             label="alamat"
             laber-for="input-alamat"
@@ -58,11 +42,6 @@
             placeholder="Input nomor HP"
             class="mb-2"
           ></b-form-input>
-          <b-form-select
-            class="mb-2"
-            v-model="form.jenisKelamin"
-            :options="options"
-          ></b-form-select>
           <b-button type="submit" block variant="primary">Submit</b-button>
         </b-form>
       </div>
@@ -118,10 +97,12 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
+    this.loading = true;
     this.$_loadingTimeInterval = null;
     this.id = localStorage.getItem("id");
-    this.getProfile();
+    await this.getProfile();
+    this.loading = false;
   },
 
   mounted() {
@@ -138,10 +119,11 @@ export default {
       this.loadingTime = 0;
     },
 
-    getProfile() {
+  async  getProfile() {
       this.loading = true;
-      this.$axios.get(`${ipBackendUser}profil`).then((res) => {
+     await this.$axios.get(`${ipBackendUser}profil`).then((res) => {
         this.form = res.data.data[0];
+        console.log(this.form);
         this.loading = false;
       });
     },
@@ -166,7 +148,7 @@ export default {
           })
           .catch((error) => {
             console.log(error);
-            alert("update gagal")
+            alert("update gagal");
           });
       } catch (error) {
         alert(error);

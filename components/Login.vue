@@ -161,11 +161,13 @@ export default {
             localStorage.setItem("token", res.data.token);
             localStorage.setItem("id", res.data.id);
             localStorage.setItem("role", res.data.role);
-          }
-          this.id = localStorage.getItem("id");
-          if (this.id) {
-            alert("login berhasil");
-            this.$router.push({ path: "dashboard" });
+            this.id = localStorage.getItem("id");
+            if (this.id) {
+              alert("login berhasil");
+              this.$router.push({ path: "dashboard" });
+            }
+          } else {
+            alert(res.data.message);
           }
         })
         .catch((error) => {

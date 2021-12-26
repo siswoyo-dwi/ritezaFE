@@ -2,13 +2,19 @@
   <div variant="secondary">
     <b-nav vertical id="list">
       <NuxtLink to="/dashboardsalesid" class="navbarLayoutDefault"
-        ><b-button class="sidebarr d-flex justify-content-start" size="sm"
+        ><b-button block class="sidebarr d-flex justify-content-start" size="sm"
+          ><b-icon class="ml-3" icon="layers"></b-icon>
+          <div class="ml-3">Get Link</div>
+        </b-button></NuxtLink
+      >
+      <NuxtLink to="/dashboardsalesid" class="navbarLayoutDefault"
+        ><b-button block class="sidebarr d-flex justify-content-start" size="sm"
           ><b-icon class="ml-3" icon="layers"></b-icon>
           <div class="ml-3">Get Link</div>
         </b-button></NuxtLink
       >
       <NuxtLink to="/salesupdateprofile" class="navbarLayoutDefault">
-        <b-button class="d-flex justify-content-start" size="sm"
+        <b-button block class="d-flex justify-content-start" size="sm"
           ><b-icon class="ml-3" icon="person"></b-icon>
           <div class="ml-3">Update Profile</div></b-button
         ></NuxtLink

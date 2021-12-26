@@ -28,17 +28,6 @@
           placeholder="Keterangan Barang"
         ></b-form-input>
       </b-form-group>
-      <b-form-file
-        type="file"
-        enctype="multipart/form-data"
-        @change="upload($event)"
-        ref="file"
-        v-model="form.file1"
-        :state="Boolean(form.file1)"
-        placeholder="Choose a file or drop it here..."
-        drop-placeholder="Drop file here..."
-      ></b-form-file>
-
       <b-button class="mt-3" type="submit" variant="primary" block
         >Submit</b-button
       >
@@ -117,6 +106,7 @@ export default {
             this.form.komisiBarang = "";
             this.form.keteranganBarang = "";
             alert("registrasi berhasil");
+            this.$router.push("/dashboard");
           })
           .catch((err) => {
             console.log(err);

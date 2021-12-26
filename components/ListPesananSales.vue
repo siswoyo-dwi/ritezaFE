@@ -70,8 +70,7 @@
       </b-row>
 
       <b-table
-        striped
-        hover
+        bordered
         :items="items"
         :fields="fields"
         :per-page="perPage"
@@ -122,14 +121,14 @@ export default {
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
-        { key: "nama" },
-        { key: "alamat" },
-        { key: "noHP" },
-        { key: "NIK" },
-        { key: "tanggal" },
-        { key: "komisi" },
-        { key: "harga" },
-        { key: "status" },
+        { key: "nama" , thClass: 'bg-info text-light'},
+        { key: "pesanan" , thClass: 'bg-info text-light'},
+        { key: "noHP" , thClass: 'bg-info text-light'},
+        { key: "NIK" , thClass: 'bg-info text-light'},
+        { key: "tanggal" , thClass: 'bg-info text-light'},
+        { key: "komisi" , thClass: 'bg-info text-light'},
+        { key: "harga" , thClass: 'bg-info text-light'},
+        { key: "status" , thClass: 'bg-info text-light'},
       ],
       items: [],
       options1: [],
@@ -169,6 +168,8 @@ export default {
             this.items.push({
               id: list.data.data[i].pesananId,
               nomor: i + 1,
+              sales: list.data.data[i].username,
+              pesanan: list.data.data[i].namaBarang,
               nama: list.data.data[i].namaPemesan,
               alamat: list.data.data[i].alamatPemesan,
               noHP: list.data.data[i].noHPPemesan,

@@ -46,6 +46,8 @@
             </template>
           </b-form-select>
         </b-col>
+      </b-row>
+      <b-row>
         <b-col>
           <label>Pemesan</label>
 
@@ -67,25 +69,35 @@
           </b-form-select>
         </b-col>
         <b-col>
-          <b-button
-            size="sm"
-            class="button"
-            type="submit"
-            variant="primary"
-            @click="submit()"
-            >Search</b-button
-          >
+          <label>Status</label>
+
+          <b-form-select v-model="statusPesanan" :options="options4" size="sm">
+            <template #first>
+              <b-form-select-option :value="null">Status</b-form-select-option>
+            </template>
+          </b-form-select>
         </b-col>
       </b-row>
-
+      <b-row>
+        <b-button
+          size="sm"
+          class="button mt-5"
+          type="submit"
+          variant="primary"
+          @click="submit()"
+          block
+          >Search</b-button
+        >
+      </b-row>
       <b-table
-        striped
-        hover
+        class="mt-5"
+        bordered
         :items="items"
         :fields="fields"
         :per-page="perPage"
         :current-page="currentPage"
       >
+        <b-tr head-variant="dark"> </b-tr>
         <template #cell(update)="row">
           <b-button
             size="sm"
@@ -94,6 +106,16 @@
             class="mr-2"
           >
             <b-icon icon="pencil"></b-icon>
+          </b-button>
+        </template>
+        <template #cell(detail)="row">
+          <b-button
+            size="sm"
+            variant="outline-primary"
+            @dblclick="goTo(row)"
+            class="mr-2"
+          >
+            <b-icon icon="layers"></b-icon>
           </b-button>
         </template>
       </b-table>
@@ -112,12 +134,13 @@ import {
   ipBackendUser,
   ipBackendBarang,
 } from "../assets/js/ipBeckEnd";
-import { BIcon, BIconPencil } from "bootstrap-vue";
+import { BIcon, BIconPencil ,BIconLayers} from "bootstrap-vue";
 
 export default {
   components: {
     BIcon,
     BIconPencil,
+    BIconLayers,
   },
   computed: {
     rows() {
@@ -129,6 +152,7 @@ export default {
       perPage: 10,
       currentPage: 1,
       dataSales: "",
+      statusPesanan: "",
       dataBarang: "",
       value1: null,
       value2: null,
@@ -137,19 +161,24 @@ export default {
       pemesan: null,
       produk: null,
       produkId: null,
-
+      options4: [
+        { value: 0, text: "Diproses" },
+        { value: 1, text: "Diterima" },
+        { value: 2, text: "Ditolak" },
+      ],
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
-        { key: "nama" },
-        { key: "alamat" },
-        { key: "noHP" },
-        { key: "NIK" },
-        { key: "tanggal" },
-        { key: "komisi" },
-        { key: "harga" },
-        { key: "status" },
-        { key: "update" },
+        { key: "nomor" , thClass: 'bg-info text-light'},
+        { key: "nama" , thClass: 'bg-info text-light'},
+        { key: "pesanan" , thClass: 'bg-info text-light'},
+        { key: "sales" , thClass: 'bg-info text-light' },
+        { key: "tanggal" , thClass: 'bg-info text-light' },
+        { key: "komisi" , thClass: 'bg-info text-light' },
+        { key: "harga" , thClass: 'bg-info text-light' },
+        { key: "status" , thClass: 'bg-info text-light' },
+        { key: "update" , thClass: 'bg-info text-light' },
+        { key: "detail" , thClass: 'bg-info text-light' },
       ],
       items: [],
       options1: [],
@@ -192,15 +221,19 @@ export default {
       this.loading = true;
 
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
+        console.log(list);
         if (list.data.data.length > 0) {
           console.log(list.data.data);
 
           for (let i = 0; i < list.data.data.length; i++) {
             this.options2.push(list.data.data[i].namaPemesan);
             this.items.push({
+              nomor: i,
               id: list.data.data[i].pesananId,
               nomor: i + 1,
               nama: list.data.data[i].namaPemesan,
+              sales: list.data.data[i].username,
+              pesanan: list.data.data[i].namaBarang,
               alamat: list.data.data[i].alamatPemesan,
               noHP: list.data.data[i].noHPPemesan,
               NIK: list.data.data[i].NIKPemesan,
@@ -220,6 +253,10 @@ export default {
       const id = index.item.id;
       this.$router.push({ path: `/update/pesanan/${id}` });
     },
+    async goTo(index) {
+      const id = index.item.id;
+      this.$router.push({ path: `/detail/${id}` });
+    },
     async submit() {
       this.loading = true;
       this.items = [];
@@ -227,6 +264,7 @@ export default {
         tanggalAwal: this.$moment(this.value1),
         tanggalAkhir: this.$moment(this.value2),
         namaPemesan: this.pemesan,
+        statusPesanan: this.statusPesanan,
         userId: this.salesId,
         masterBarangId: this.produkId,
       };
@@ -265,6 +303,11 @@ export default {
         }
       }
     },
+    // async statusPesanan(newValue, oldValue) {
+    //   if (newValue !== oldValue) {
+
+    //   }
+    // },
     async produk(newValue, oldValue) {
       if (newValue !== oldValue) {
         console.log(this.dataBarang);

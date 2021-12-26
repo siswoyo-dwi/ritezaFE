@@ -59,7 +59,6 @@
   </b-card>
 </template>
 <script>
-import axios from "axios";
 import { ipBackendUser } from "../../assets/js/ipBeckEnd";
 
 export default {
@@ -78,9 +77,8 @@ export default {
       let data = {
         username: this.form.username,
         password: this.form.password,
+        role:'sales',
       };
-      // this.$store
-      //   .dispatch("register", data)
       await this.$axios
         .post(`${ipBackendUser}/register`, data)
         .then((response) => {

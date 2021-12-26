@@ -59,36 +59,6 @@
               ></b-form-input>
             </b-col>
             <b-col class="col-2 pl-2" style="margin: 23px 0 0 0">
-              <!-- <b-button
-                class="formInput button-input"
-                size="sm"
-                variant="light"
-              >
-                <b-icon
-                  variant="primary"
-                  class="icontriangle"
-                  icon="triangle-fill"
-                >
-                 
-                </b-icon>
-              </b-button> -->
-              <!-- <div>
-                <b-dropdown
-                  id="dropdown-offset"
-                  offset="25"
-                  size="sm"
-                  variant="light"
-                  toggle-class="rounded-circle text-primary"
-                >
-                  <b-dropdown-item
-                    v-for="list in lists"
-                    :key="list.id"
-                    v-model="form.pesanan"
-                    :value="`${list.namaBarang}`"
-                    >{{ list.namaBarang }}</b-dropdown-item
-                  >
-                </b-dropdown>
-              </div> -->
               <b-form-select
                 v-model="form.pesanan"
                 :options="options"

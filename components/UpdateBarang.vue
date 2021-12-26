@@ -23,12 +23,12 @@
           placeholder="Keterangan Barang"
         ></b-form-input>
       </b-form-group>
-      <b-form-file
+      <!-- <b-form-file
         v-model="form.file1"
         :state="Boolean(form.file1)"
         placeholder="Choose a file or drop it here..."
         drop-placeholder="Drop file here..."
-      ></b-form-file>
+      ></b-form-file> -->
 
       <b-button class="mt-3" type="submit" variant="primary" block
         >Submit</b-button
@@ -55,7 +55,6 @@ export default {
     };
   },
   async created() {
-    // const tanggal = this.$moment(new Date());
     await this.getData();
   },
   methods: {
@@ -76,10 +75,12 @@ export default {
     async onSubmit(event) {
       event.preventDefault();
       let formData = new FormData();
-      formData.append("file1", this.file1);
+      // formData.append("file1", this.file1);
       formData.append("namaBarang", this.form.namaBarang);
       formData.append("komisiBarang", this.form.komisiBarang);
       formData.append("keteranganBarang", this.form.keteranganBarang);
+      formData.append("id", this.id);
+
       try {
         const data = await this.$axios
           .post(`${ipBackendBarang}update`, formData, {
@@ -97,13 +98,13 @@ export default {
               file1: null,
               tanggal: "",
             };
+            this.$router.push("/dashboard");
           })
           .catch((err) => {
             console.log(err);
             alert("update gagal");
           });
       } catch (error) {}
-      return { data };
     },
   },
 };
