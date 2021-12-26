@@ -21,9 +21,9 @@ export default {
         .post(`${ipBackendKategori}register`, {
           namaKategori: this.namaKategori,
         })
-        .then(() => {
+        .then((res) => {
           this.namaKategori = "";
-          alert("registrasi berhasil");
+          alert(res.data.message);
           this.$router.push("/dashboard");
         });
     },

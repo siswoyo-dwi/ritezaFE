@@ -119,9 +119,9 @@ export default {
       this.loadingTime = 0;
     },
 
-  async  getProfile() {
+    async getProfile() {
       this.loading = true;
-     await this.$axios.get(`${ipBackendUser}profil`).then((res) => {
+      await this.$axios.get(`${ipBackendUser}profil`).then((res) => {
         this.form = res.data.data[0];
         console.log(this.form);
         this.loading = false;
@@ -143,7 +143,7 @@ export default {
         await this.$axios
           .post(`${ipBackendUser}update`, data)
           .then((res) => {
-            alert("update  sukses");
+            alert(res.data.message);
             this.$router.push({ path: "/" });
           })
           .catch((error) => {

@@ -105,7 +105,7 @@ export default {
             this.form.namaBarang = "";
             this.form.komisiBarang = "";
             this.form.keteranganBarang = "";
-            alert("registrasi berhasil");
+            alert(res.data.message);
             this.$router.push("/dashboard");
           })
           .catch((err) => {

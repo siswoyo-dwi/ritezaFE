@@ -89,9 +89,9 @@ export default {
         };
         await this.$axios
           .post(`${ipBackendUser}changePasswordByAdmin`, data)
-          .then((response) => {
+          .then((res) => {
             this.$router.push("/dashboard");
-            return response.data;
+            alert(res.data.message);
           })
           .catch((error) => {
             this.errors = error.response.data.errors;

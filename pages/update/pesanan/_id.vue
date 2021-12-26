@@ -1,5 +1,5 @@
 <template>
-  <UpdatePesanan />
+  <UpdateDataPesanan />
 </template>
 
 <script>

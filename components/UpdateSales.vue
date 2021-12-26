@@ -154,7 +154,7 @@ export default {
         await this.$axios
           .post(`${ipBackendUser}update`, data)
           .then((res) => {
-            alert("update  sukses");
+            alert(res.data.message);
             this.$router.push({ path: "/dashboard" });
           })
           .catch((error) => {

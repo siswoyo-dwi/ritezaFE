@@ -129,13 +129,17 @@ export default {
                 username: this.profil,
                 password: this.form.passwordBaru,
               };
-              await this.$axios.post(`${ipBackendUser}login`, login).then((res) => {
-                console.log(res);
-                if (res.data.token) {
-                  localStorage.setItem("token", res.data.token);
-                  this.$router.push({ path: "/" });
-                }
-              });
+              await this.$axios
+                .post(`${ipBackendUser}login`, login)
+                .then((res) => {
+                  console.log(res);
+                  if (res.data.token) {
+                    localStorage.setItem("token", res.data.token);
+                    alert(res.data.message);
+
+                    this.$router.push({ path: "/" });
+                  }
+                });
             })
             .catch((error) => {
               console.log(error);

@@ -89,8 +89,7 @@ export default {
             },
           })
           .then((res) => {
-            console.log(res);
-            alert("update berhasil");
+            alert(res.data.message);
             this.form = {
               namaBarang: "",
               komisiBarang: "",

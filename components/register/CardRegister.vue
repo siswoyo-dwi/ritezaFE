@@ -77,13 +77,13 @@ export default {
       let data = {
         username: this.form.username,
         password: this.form.password,
-        role:'sales',
+        role: "sales",
       };
       await this.$axios
-        .post(`${ipBackendUser}/register`, data)
-        .then((response) => {
+        .post(`${ipBackendUser}register`, data)
+        .then((res) => {
+          alert(res.data.message);
           this.$router.push("/dashboard");
-          return response.data;
         })
         .catch((error) => {
           this.errors = error.response.data.errors;
