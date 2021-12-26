@@ -25,22 +25,6 @@
     <div class="row d-flex justify-content-center align-items-center" v-else>
       <div class="col-md-6">
         <b-form @submit="onSubmit">
-          <!-- <b-form-input
-            label="nama"
-            laber-for="input-3"
-            v-model="form.nama"
-            placeholder="Input nama"
-            class="mb-2"
-          ></b-form-input>
-          <b-form-input
-            id="form-nomorKTP"
-            label="nomorKTP"
-            laber-for="input-nomorKTP"
-            v-model="form.nomorKTP"
-            type="number"
-            placeholder="Input nomor KTP"
-            class="mb-2"
-          ></b-form-input> -->
           <b-form-input
             id="form-alamat"
             label="alamat"

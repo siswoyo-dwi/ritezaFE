@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <Header />
     <b-spinner v-if="loading"></b-spinner>
     <div v-else>
       <b-row class="my-5">
@@ -135,7 +136,6 @@ import {
   ipBackendBarang,
 } from "../assets/js/ipBeckEnd";
 import { BIcon, BIconPencil ,BIconLayers} from "bootstrap-vue";
-
 export default {
   components: {
     BIcon,
