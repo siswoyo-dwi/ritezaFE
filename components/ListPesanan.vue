@@ -135,7 +135,7 @@ import {
   ipBackendUser,
   ipBackendBarang,
 } from "../assets/js/ipBeckEnd";
-import { BIcon, BIconPencil ,BIconLayers} from "bootstrap-vue";
+import { BIcon, BIconPencil, BIconLayers } from "bootstrap-vue";
 export default {
   components: {
     BIcon,
@@ -169,16 +169,16 @@ export default {
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
-        { key: "nomor" , thClass: 'bg-info text-light'},
-        { key: "nama" , thClass: 'bg-info text-light'},
-        { key: "pesanan" , thClass: 'bg-info text-light'},
-        { key: "sales" , thClass: 'bg-info text-light' },
-        { key: "tanggal" , thClass: 'bg-info text-light' },
-        { key: "komisi" , thClass: 'bg-info text-light' },
-        { key: "harga" , thClass: 'bg-info text-light' },
-        { key: "status" , thClass: 'bg-info text-light' },
-        { key: "update" , thClass: 'bg-info text-light' },
-        { key: "detail" , thClass: 'bg-info text-light' },
+        { key: "nomor", thClass: "bg-info text-light" },
+        { key: "nama", thClass: "bg-info text-light" },
+        { key: "pesanan", thClass: "bg-info text-light" },
+        { key: "sales", thClass: "bg-info text-light" },
+        { key: "tanggal", thClass: "bg-info text-light" },
+        { key: "komisi", thClass: "bg-info text-light" },
+        { key: "harga", thClass: "bg-info text-light" },
+        { key: "status", thClass: "bg-info text-light" },
+        { key: "update", thClass: "bg-info text-light" },
+        { key: "detail", thClass: "bg-info text-light" },
       ],
       items: [],
       options1: [],
@@ -221,10 +221,7 @@ export default {
       this.loading = true;
 
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
-        console.log(list);
         if (list.data.data.length > 0) {
-          console.log(list.data.data);
-
           for (let i = 0; i < list.data.data.length; i++) {
             this.options2.push(list.data.data[i].namaPemesan);
             this.items.push({
@@ -269,7 +266,6 @@ export default {
         masterBarangId: this.produkId,
       };
       await this.$axios.post(`${ipBackendPesanan}list`, data).then((list) => {
-        console.log(data);
         if (list.data.data.length > 0) {
           for (let i = 0; i < list.data.data.length; i++) {
             this.items.push({
@@ -295,7 +291,6 @@ export default {
   watch: {
     async sales(newValue, oldValue) {
       if (newValue !== oldValue) {
-        console.log(newValue, oldValue);
         for (let i = 0; i < this.dataSales.length; i++) {
           if (this.dataSales[i].username == this.sales) {
             this.salesId = this.dataSales[i].id;
@@ -310,7 +305,6 @@ export default {
     // },
     async produk(newValue, oldValue) {
       if (newValue !== oldValue) {
-        console.log(this.dataBarang);
         for (let i = 0; i < this.dataBarang.length; i++) {
           if (this.dataBarang[i].namaBarang == this.produk) {
             this.produkId = this.dataBarang[i].masterBarangId;

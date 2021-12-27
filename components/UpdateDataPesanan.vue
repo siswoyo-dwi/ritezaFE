@@ -124,7 +124,7 @@ export default {
     return {
       maxLoadingTime: 3,
       loadingTime: 0,
-
+      pesananBaru: 0,
       loading: false,
       keterangan: [
         { text: "Diterima", value: 1 },
@@ -173,7 +173,13 @@ export default {
       this.loading = true;
       this.loadingTime = 0;
     },
-
+  async getPesananBaru() {
+      await this.$axios
+        .get(`${ipBackendPesanan}jumlahByStatus/0`)
+        .then((res) => {
+          this.pesananBaru = res.data.data[0].count;
+        });
+    },
     async onSubmit(event) {
       event.preventDefault();
 
@@ -185,13 +191,16 @@ export default {
       try {
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
-          .then((res) => {
-            alert(res.data.message);
+          .then(async (res) => {
             this.$router.push({ path: "/dashboard" });
+            await this.getPesananBaru();
+            this.$nuxt.$emit("eventName", this.pesananBaru);
+            alert(res.data.message);
+            this.loading = false;
           })
-          .catch((error) => {
-            console.log(error);
-            alert("update gagal");
+          .catch((err) => {
+            this.loading = false;
+            alert(err.data.message);
           });
       } catch (error) {
         alert(error);

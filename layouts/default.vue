@@ -100,6 +100,7 @@ export default {
   },
   created() {
     this.getPesananBaru();
+    this.$nuxt.$on("eventName", ($event) => this.add($event));
   },
   methods: {
     async getPesananBaru() {
@@ -112,8 +113,9 @@ export default {
     logout() {
       localStorage.clear();
     },
-    add() {
-      this.status++;
+    add(e) {
+      setTimeout(this.status++, 1000);
+      console.log('hai',e);
     },
     geser() {
       if (this.isActive) {

@@ -169,7 +169,6 @@ export default {
       this.loading = true;
 
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
-        console.log(list);
         if (list.data.message !== "anda belum login") {
           this.pesanan = list.data.data.length;
           this.loading = false;

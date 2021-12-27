@@ -31,7 +31,16 @@
         >Submit</b-button
       >
 
-      <b-button type="submit" v-else block variant="primary">Submit</b-button>
+      <b-button
+        type="submit"
+        @click="$nuxt.$emit('eventName', pesananBaru)"
+        v-else
+        block
+        variant="primary"
+      >
+        <!-- Submit -->
+        <div>Submit</div>
+      </b-button>
     </b-form>
   </div>
 </template>
@@ -48,9 +57,17 @@ export default {
       hargaBarang: null,
       statusPesanan: "",
       loading: false,
+      pesananBaru: 0,
     };
   },
   methods: {
+    async getPesananBaru() {
+      await this.$axios
+        .get(`${ipBackendPesanan}jumlahByStatus/0`)
+        .then((res) => {
+          this.pesananBaru = res.data.data[0].count;
+        });
+    },
     async onSubmit() {
       this.loading = true;
       const data = {
@@ -61,16 +78,18 @@ export default {
       if (data) {
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
-          .then((res) => {
-            this.$parent.$emit("eventName");
+          .then(async(res) => {
+            console.log('222');
             this.$router.push({ path: "/dashboard" });
+            await this.getPesananBaru();
+            this.$nuxt.$emit("eventName", this.pesananBaru);
+            console.log(this.pesananBaru,'hai');
             alert(res.data.message);
             this.loading = false;
           })
           .catch((err) => {
-            console.log(err);
             this.loading = false;
-            alert("update  gagal");
+            alert(err.data.message);
           });
       }
     },
