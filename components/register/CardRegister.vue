@@ -78,25 +78,29 @@ export default {
   methods: {
     async onSubmit(event) {
       event.preventDefault();
-      this.loading = true;
-      let data = {
-        username: this.form.username,
-        password: this.form.password,
-        role: "sales",
-      };
-      await this.$axios
-        .post(`${ipBackendUser}register`, data)
-        .then((res) => {
-          alert(res.data.message);
-          this.loading = false;
+      if (this.form.username !== "" && this.form.password !== "") {
+        this.loading = true;
+        let data = {
+          username: this.form.username,
+          password: this.form.password,
+          role: "sales",
+        };
+        await this.$axios
+          .post(`${ipBackendUser}register`, data)
+          .then((res) => {
+            alert(res.data.message);
+            this.loading = false;
 
-          this.$router.push("/dashboard");
-        })
-        .catch((error) => {
-          this.loading = false;
+            this.$router.push("/dashboard");
+          })
+          .catch((error) => {
+            this.loading = false;
 
-          this.errors = error.response.data.errors;
-        });
+            this.errors = error.response.data.errors;
+          });
+      } else {
+        alert("mohon lengkapi data");
+      }
     },
   },
 };

@@ -94,40 +94,48 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
-      this.loading = true;
+      if (
+        this.form.kategoriBarangId != "" &&
+        this.form.namaBarang != "" &&
+        this.form.komisiBarang != "" &&
+        this.form.keteranganBarang != ""
+      ) {
+        this.loading = true;
+        let formData = new FormData();
+        formData.append("file1", this.form.file1);
+        formData.append("kategoriBarangId", this.form.kategoriBarangId);
+        formData.append("namaBarang", this.form.namaBarang);
+        formData.append("komisiBarang", this.form.komisiBarang);
+        formData.append("keteranganBarang", this.form.keteranganBarang);
+        try {
+          await this.$axios
+            .post(`${ipBackendBarang}register`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            })
+            .then((res) => {
+              console.log(res);
+              this.form.file1 = "";
+              this.form.kategoriBarangId = "";
+              this.form.namaBarang = "";
+              this.form.komisiBarang = "";
+              this.form.keteranganBarang = "";
+              alert(res.data.message);
+              this.loading = false;
 
-      let formData = new FormData();
-      formData.append("file1", this.form.file1);
-      formData.append("kategoriBarangId", this.form.kategoriBarangId);
-      formData.append("namaBarang", this.form.namaBarang);
-      formData.append("komisiBarang", this.form.komisiBarang);
-      formData.append("keteranganBarang", this.form.keteranganBarang);
-      try {
-        await this.$axios
-          .post(`${ipBackendBarang}register`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((res) => {
-            console.log(res);
-            this.form.file1 = "";
-            this.form.kategoriBarangId = "";
-            this.form.namaBarang = "";
-            this.form.komisiBarang = "";
-            this.form.keteranganBarang = "";
-            alert(res.data.message);
-            this.loading = false;
+              this.$router.push("/dashboard");
+            })
+            .catch((err) => {
+              this.loading = false;
 
-            this.$router.push("/dashboard");
-          })
-          .catch((err) => {
-            this.loading = false;
-
-            console.log(err);
-          });
-      } catch (error) {
-        this.loading = false;
+             alert(err.data.message);
+            });
+        } catch (error) {
+          this.loading = false;
+        }
+      }else{
+        alert('mohon lengkapi data')
       }
     },
   },
