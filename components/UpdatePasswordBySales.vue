@@ -79,7 +79,8 @@
               >show password</label
             >
           </div>
-          <b-button type="submit" variant="primary" block>Submit</b-button>
+          <b-button type="submit" v-if="loading" disabled variant="primary" block>Submit</b-button>
+          <b-button type="submit" v-else variant="primary" block>Submit</b-button>
         </form>
       </div>
     </b-card>
@@ -99,6 +100,7 @@ export default {
       },
       id: localStorage.getItem("id"),
       profil: "",
+      loading: false,
     };
   },
   created() {
@@ -115,6 +117,8 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
+
       if (this.form.passwordBaru === this.form.konfirmasi) {
         let data = {
           passwordBaru: this.form.passwordBaru,
@@ -134,6 +138,8 @@ export default {
                 .then((res) => {
                   console.log(res);
                   if (res.data.token) {
+                    this.loading = false;
+
                     localStorage.setItem("token", res.data.token);
                     alert(res.data.message);
 
@@ -142,6 +148,8 @@ export default {
                 });
             })
             .catch((error) => {
+              this.loading = false;
+
               console.log(error);
             });
         }

@@ -25,23 +25,28 @@
     <div class="row d-flex justify-content-center align-items-center" v-else>
       <div class="col-md-6">
         <b-form @submit="onSubmit">
-          <b-form-input
-            id="form-alamat"
-            label="alamat"
-            laber-for="input-alamat"
-            v-model="form.alamat"
-            placeholder="Input alamat"
-            class="mb-2"
-          ></b-form-input>
-          <b-form-input
-            id="form-noHp"
-            label="noHp"
-            laber-for="input-noHp"
-            v-model="form.noHp"
-            type="number"
-            placeholder="Input nomor HP"
-            class="mb-2"
-          ></b-form-input>
+          <b-form-group label="Alamat :">
+            <b-form-input
+              id="form-alamat"
+              label="alamat"
+              laber-for="input-alamat"
+              v-model="form.alamat"
+              placeholder="Input alamat"
+              class="mb-2"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="No Hp :">
+            <b-form-input
+              id="form-noHp"
+              label="noHp"
+              laber-for="input-noHp"
+              v-model="form.noHp"
+              type="number"
+              placeholder="Input nomor HP"
+              class="mb-2"
+            ></b-form-input>
+          </b-form-group>
+
           <b-button type="submit" block variant="primary">Submit</b-button>
         </b-form>
       </div>

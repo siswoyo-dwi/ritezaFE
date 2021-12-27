@@ -164,9 +164,11 @@ export default {
             this.id = localStorage.getItem("id");
             if (this.id) {
               alert("login berhasil");
+              this.loading = false;
               this.$router.push({ path: "dashboard" });
             }
           } else {
+            this.loading = false;
             alert(res.data.message);
           }
         })

@@ -28,7 +28,15 @@
           placeholder="Keterangan Barang"
         ></b-form-input>
       </b-form-group>
-      <b-button class="mt-3" type="submit" variant="primary" block
+      <b-button
+        class="mt-3"
+        v-if="loading"
+        type="submit"
+        variant="primary"
+        block
+        >Submit</b-button
+      >
+      <b-button class="mt-3" v-else type="submit" variant="primary" block
         >Submit</b-button
       >
     </b-form>
@@ -49,6 +57,7 @@ export default {
         file1: null,
         tanggal: "",
       },
+      loading: false,
       kategoriBarang: [],
       kategori: [],
       kategoriId: "",
@@ -85,6 +94,8 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
+
       let formData = new FormData();
       formData.append("file1", this.form.file1);
       formData.append("kategoriBarangId", this.form.kategoriBarangId);
@@ -106,12 +117,18 @@ export default {
             this.form.komisiBarang = "";
             this.form.keteranganBarang = "";
             alert(res.data.message);
+            this.loading = false;
+
             this.$router.push("/dashboard");
           })
           .catch((err) => {
+            this.loading = false;
+
             console.log(err);
           });
-      } catch (error) {}
+      } catch (error) {
+        this.loading = false;
+      }
     },
   },
 };

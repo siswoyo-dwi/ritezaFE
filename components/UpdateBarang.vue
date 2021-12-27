@@ -29,8 +29,16 @@
         placeholder="Choose a file or drop it here..."
         drop-placeholder="Drop file here..."
       ></b-form-file> -->
-
-      <b-button class="mt-3" type="submit" variant="primary" block
+      <b-button
+        class="mt-3"
+        v-if="loading"
+        disabled
+        type="submit"
+        variant="primary"
+        block
+        >Submit</b-button
+      >
+      <b-button class="mt-3" v-else type="submit" variant="primary" block
         >Submit</b-button
       >
     </b-form>
@@ -52,6 +60,7 @@ export default {
         file1: null,
         tanggal: "",
       },
+      loading: false,
     };
   },
   async created() {
@@ -74,6 +83,7 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
       let formData = new FormData();
       // formData.append("file1", this.file1);
       formData.append("namaBarang", this.form.namaBarang);
@@ -97,10 +107,14 @@ export default {
               file1: null,
               tanggal: "",
             };
+            this.loading = false;
+
             this.$router.push("/dashboard");
           })
           .catch((err) => {
             console.log(err);
+            this.loading = false;
+
             alert("update gagal");
           });
       } catch (error) {}

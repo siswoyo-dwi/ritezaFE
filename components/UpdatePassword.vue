@@ -59,7 +59,17 @@
               >show password</label
             >
           </div>
-          <b-button type="submit" variant="primary" block>Submit</b-button>
+          <b-button
+            type="submit"
+            v-if="loading"
+            disabled
+            variant="primary"
+            block
+            >Submit</b-button
+          >
+          <b-button type="submit" v-else variant="primary" block
+            >Submit</b-button
+          >
         </form>
       </div>
     </b-card>
@@ -77,11 +87,13 @@ export default {
         cek: [],
       },
       id: this.$route.params.id,
+      loading: false,
     };
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
       if (this.form.passwordBaru === this.form.konfirmasi) {
         let data = {
           passwordBaru: this.form.passwordBaru,
@@ -90,13 +102,18 @@ export default {
         await this.$axios
           .post(`${ipBackendUser}changePasswordByAdmin`, data)
           .then((res) => {
+            this.loading = false;
             this.$router.push("/dashboard");
             alert(res.data.message);
           })
           .catch((error) => {
+            this.loading = false;
+
             this.errors = error.response.data.errors;
           });
       } else {
+        this.loading = false;
+
         alert("password baru belum sesuai");
       }
     },

@@ -32,7 +32,6 @@
         <b-icon icon="justify" @click="geser" v-b-toggle.sidebar-1></b-icon>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/">
           <b-icon
-            @click="add()"
             icon="person-circle"
             variant="primary"
             class="ml-3"
@@ -67,7 +66,7 @@
           ><div @click="logout()">Logout</div>
         </NuxtLink>
       </b-navbar>
-      <Nuxt />
+      <Nuxt @eventname="add()" />
     </div>
   </div>
 </template>

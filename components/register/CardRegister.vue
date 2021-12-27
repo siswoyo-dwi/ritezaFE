@@ -53,7 +53,10 @@
             >show password</label
           >
         </div>
-        <b-button type="submit" variant="primary" block>Submit</b-button>
+        <b-button type="submit" v-if="loading" disabled variant="primary" block
+          >Submit</b-button
+        >
+        <b-button type="submit" v-else variant="primary" block>Submit</b-button>
       </form>
     </div>
   </b-card>
@@ -69,11 +72,13 @@ export default {
         password: "",
         cek: [],
       },
+      loading: false,
     };
   },
   methods: {
     async onSubmit(event) {
       event.preventDefault();
+      this.loading = true;
       let data = {
         username: this.form.username,
         password: this.form.password,
@@ -83,9 +88,13 @@ export default {
         .post(`${ipBackendUser}register`, data)
         .then((res) => {
           alert(res.data.message);
+          this.loading = false;
+
           this.$router.push("/dashboard");
         })
         .catch((error) => {
+          this.loading = false;
+
           this.errors = error.response.data.errors;
         });
     },

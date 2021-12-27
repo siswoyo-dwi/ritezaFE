@@ -27,8 +27,11 @@
           </b-form-group>
         </b-col>
       </b-row>
+      <b-button type="submit" v-if="loading" disabled block variant="primary"
+        >Submit</b-button
+      >
 
-      <b-button type="submit" block variant="primary">Submit</b-button>
+      <b-button type="submit" v-else block variant="primary">Submit</b-button>
     </b-form>
   </div>
 </template>
@@ -44,10 +47,12 @@ export default {
       id: this.$route.params.id,
       hargaBarang: null,
       statusPesanan: "",
+      loading: false,
     };
   },
   methods: {
     async onSubmit() {
+      this.loading = true;
       const data = {
         hargaBarang: this.hargaBarang,
         statusPesanan: this.statusPesanan,
@@ -57,11 +62,14 @@ export default {
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
           .then((res) => {
+            this.$parent.$emit("eventName");
             this.$router.push({ path: "/dashboard" });
             alert(res.data.message);
+            this.loading = false;
           })
           .catch((err) => {
             console.log(err);
+            this.loading = false;
             alert("update  gagal");
           });
       }
