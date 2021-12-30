@@ -56,7 +56,6 @@
             <template #cell(bukti)="row">
               <b-alert v-model="showBuktiTransfer" variant="danger" dismissible>
                 <b-img
-                  style="width: 200px; height: 200px"
                   :src="`${ipBackend}${row.item.buktiTransaksi}`"
                 >
                 </b-img>

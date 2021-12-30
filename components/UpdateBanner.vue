@@ -19,7 +19,11 @@
           >
           </b-form-file>
         </b-form-group>
-        <b-button type="submit" variant="primary" class="mt-3">Submit</b-button>
+        <b-button type="submit" v-if="loading" variant="primary" block
+          >Submit</b-button
+        >
+
+        <b-button type="submit" v-else variant="primary" block>Submit</b-button>
       </b-form>
     </b-row>
     <b-table bordered class="text-center mt-5" :items="items" :fields="fields">

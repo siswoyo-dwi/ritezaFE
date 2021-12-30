@@ -73,7 +73,13 @@
                 >show password</label
               >
             </div>
-            <b-button type="submit" variant="primary" block>Submit</b-button>
+            <b-button type="submit" v-if="loading" variant="primary" block
+              >Submit</b-button
+            >
+
+            <b-button type="submit" v-else variant="primary" block
+              >Submit</b-button
+            >
           </form>
         </div>
       </b-card>
