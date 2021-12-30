@@ -1,83 +1,10 @@
-<script>
-// import { ipBackendPesanan } from "../assets/js/ipBeckEnd";
-// export default {
-//   data() {
-//     return {
-//       keterangan: [
-//         { text: "Diterima", value: 1 },
-//         { text: "ditolak", value: 2 },
-//       ],
-//       id: this.$route.params.id,
-//       hargaBarang: null,
-//       statusPesanan: "",
-//     };
-//   },
-//   methods: {
-//     async onSubmit() {
-//       let data = {
-//         hargaBarang: this.hargaBarang,
-//         statusPesanan: this.statusPesanan,
-//         id: this.id,
-//       };
-//       await this.$axios
-//         .post(`${ipBackendPesanan}update`, data)
-//         .then((res) => {
-//           this.$router.push("/dashboard");
-//           alert(res.data.message);
-//         })
-//         .catch((error) => {
-//           this.errors = error.response.data.errors;
-//         });
-//     },
-//     async cek() {
-//       const data = {
-//         hargaBarang: this.hargaBarang,
-//         statusPesanan: this.statusPesanan,
-//         id: this.id,
-//       };
-//       if (data) {
-//         await this.$axios
-//           .post(`${ipBackendPesanan}update`, data)
-//           .then((res) => {
-//             alert(res.data.message);
-//           })
-//           .catch((err) => {
-//             console.log(err);
-//             alert("update  gagal");
-//           });
-//       }
-//     },
-//   },
-// };
-</script>
 <template>
   <div class="container my-5">
-    <div v-if="loading">
-      <div class="d-flex align-items-center mb-3">
-        <b-progress class="w-100" :max="maxLoadingTime" height="1.5rem">
-          <b-progress-bar
-            :value="loadingTime"
-            :label="`${((loadingTime / maxLoadingTime) * 100).toFixed(2)}%`"
-          ></b-progress-bar>
-        </b-progress>
-
-        <b-button class="ml-3" @click="startLoading()">Reload</b-button>
-      </div>
-
-      <b-skeleton-wrapper :loading="loading">
-        <template #loading>
-          <b-card>
-            <b-skeleton width="85%"></b-skeleton>
-            <b-skeleton width="55%"></b-skeleton>
-            <b-skeleton width="70%"></b-skeleton>
-          </b-card>
-        </template>
-      </b-skeleton-wrapper>
-    </div>
+    <b-spinner v-if="loading"></b-spinner>
     <div class="row d-flex justify-content-center align-items-center" v-else>
       <div class="col-md-6">
         <b-form @submit="onSubmit">
-          <b-form-group label="Harga Barang">
+          <b-form-group v-if="statusPesanan !== 2" label="Harga Barang">
             <b-form-input
               v-model="hargaBarang"
               type="number"
@@ -85,7 +12,7 @@
               required
             ></b-form-input>
           </b-form-group>
-          <b-form-group label="statusPesanan">
+          <b-form-group label="Status Pesanan">
             <b-form-select
               v-model="statusPesanan"
               placeholder="Status Pesanan"
@@ -99,6 +26,26 @@
               </template>
             </b-form-select>
           </b-form-group>
+          <b-form-group v-if="statusPesanan == 2" label="Alasan penolakan :">
+            <b-form-input
+              v-model="alasanPenolakan"
+              placeholder="Alasan Penolakan"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group v-if="statusPesanan == 1" label="Bukti transfer">
+            <b-form-file
+              type="file"
+              class="mt-5"
+              enctype="multipart/form-data"
+              @change="upload($event)"
+              ref="file"
+              :state="Boolean(file)"
+              v-model="file"
+              placeholder:none
+            >
+            </b-form-file>
+          </b-form-group>
+
           <b-button
             type="submit"
             v-if="loading"
@@ -126,6 +73,7 @@ export default {
       loadingTime: 0,
       pesananBaru: 0,
       loading: false,
+      file: null,
       keterangan: [
         { text: "Diterima", value: 1 },
         { text: "ditolak", value: 2 },
@@ -133,6 +81,7 @@ export default {
       id: this.$route.params.id,
       hargaBarang: null,
       statusPesanan: "",
+      alasanPenolakan: "",
     };
   },
 
@@ -165,6 +114,9 @@ export default {
   },
 
   methods: {
+    async upload(event) {
+      this.file = await this.$refs.file.files[0];
+    },
     clearLoadingTimeInterval() {
       clearInterval(this.$_loadingTimeInterval);
       this.$_loadingTimeInterval = null;
@@ -173,7 +125,7 @@ export default {
       this.loading = true;
       this.loadingTime = 0;
     },
-  async getPesananBaru() {
+    async getPesananBaru() {
       await this.$axios
         .get(`${ipBackendPesanan}jumlahByStatus/0`)
         .then((res) => {
@@ -182,15 +134,20 @@ export default {
     },
     async onSubmit(event) {
       event.preventDefault();
-
+      let formData = new FormData();
+      formData.append("id", this.id);
+      formData.append("file1", this.file);
       const data = {
         hargaBarang: this.hargaBarang,
         statusPesanan: this.statusPesanan,
         id: this.id,
+        alasanPenolakan: this.alasanPenolakan,
       };
       try {
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
+        await this.$axios
+          .post(`${ipBackendPesanan}update`, formData)
           .then(async (res) => {
             this.$router.push({ path: "/dashboard" });
             await this.getPesananBaru();
@@ -200,7 +157,7 @@ export default {
           })
           .catch((err) => {
             this.loading = false;
-            alert(err.data.message);
+            alert(err);
           });
       } catch (error) {
         alert(error);

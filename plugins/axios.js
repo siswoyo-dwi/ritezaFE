@@ -8,10 +8,10 @@ export default function ({ $axios, $auth, redirect, store }) {
         }
     })
     
-        $axios.onError((error) => {
-            if (error.response.status === 500) {
-                redirect('/')
-            }
-        })
+        // $axios.onError((error) => {
+        //     if (error.response.status === 500) {
+        //         redirect('/')
+        //     }
+        // })
     }
     

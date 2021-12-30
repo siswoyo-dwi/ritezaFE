@@ -10,7 +10,6 @@
       <template #default="{ hide }">
         <div
           @click="
-            geser();
             hide();
           "
         >

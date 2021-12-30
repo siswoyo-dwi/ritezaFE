@@ -79,11 +79,9 @@ export default {
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
           .then(async(res) => {
-            console.log('222');
             this.$router.push({ path: "/dashboard" });
             await this.getPesananBaru();
             this.$nuxt.$emit("eventName", this.pesananBaru);
-            console.log(this.pesananBaru,'hai');
             alert(res.data.message);
             this.loading = false;
           })

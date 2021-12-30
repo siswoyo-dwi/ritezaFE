@@ -22,48 +22,10 @@
             >
               <!-- Text slides with image -->
               <b-carousel-slide
-                caption="First slide"
-                text="Nulla vitae elit libero, a pharetra augue mollis interdum."
-                img-src="https://picsum.photos/1024/480/?image=52"
-              ></b-carousel-slide>
-
-              <!-- Slides with custom text -->
-              <b-carousel-slide
-                img-src="https://picsum.photos/1024/480/?image=54"
+                v-for="item in items"
+                :key="item.id"
+                :img-src="`${ipBackend}${item}`"
               >
-                <h1>Hello world!</h1>
-              </b-carousel-slide>
-
-              <!-- Slides with image only -->
-              <b-carousel-slide
-                img-src="https://picsum.photos/1024/480/?image=58"
-              ></b-carousel-slide>
-
-              <!-- Slides with img slot -->
-              <!-- Note the classes .d-block and .img-fluid to prevent browser default image alignment -->
-              <b-carousel-slide>
-                <template #img>
-                  <img
-                    class="d-block img-fluid w-100"
-                    width="1024"
-                    height="480"
-                    src="https://picsum.photos/1024/480/?image=55"
-                    alt="image slot"
-                  />
-                </template>
-              </b-carousel-slide>
-
-              <!-- Slide with blank fluid image to maintain slide aspect ratio -->
-              <b-carousel-slide
-                caption="Blank Image"
-                img-blank
-                img-alt="Blank image"
-              >
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Suspendisse eros felis, tincidunt a tincidunt eget, convallis
-                  vel est. Ut pellentesque ut lacus vel interdum.
-                </p>
               </b-carousel-slide>
             </b-carousel>
             <b-list-group-item variant="dark" class="text-center"
@@ -195,6 +157,7 @@ import {
   ipBackend,
   ipBackendPesanan,
   ipBackendKategori,
+  ipBackendBanner,
 } from "../assets/js/ipBeckEnd";
 import { BIcon, BIconTriangleFill } from "bootstrap-vue";
 
@@ -205,6 +168,7 @@ export default {
   },
   data() {
     return {
+      items: [],
       namaPemesan: "",
       alamatPemesan: "",
       noHPPemesan: "",
@@ -227,12 +191,14 @@ export default {
       listPesanan: [],
       pesanan: "",
       pesananId: "",
+      slide: 0,
+      sliding: null,
     };
   },
   async created() {
     this.loading = true;
-    // await this.getDataBarang();
     await this.getKategori();
+    await this.getBanner();
     this.loading = false;
   },
   watch: {
@@ -259,23 +225,33 @@ export default {
     async pesanan(newValue, oldValue) {
       if (newValue !== oldValue) {
         for (let i = 0; i < this.listPesanan.length; i++) {
-          console.log(this.listPesanan[i]);
           if (this.listPesanan[i].namaBarang == this.pesanan) {
             this.pic = this.listPesanan[i].gambarBarang;
             this.tanggalPesan = this.$moment(new Date());
             this.komisiPesanan = this.listPesanan[i].komisiBarang;
             this.masterBarangId = this.listPesanan[i].masterBarangId;
-            console.log(
-              this.tanggalPesan,
-              this.komisiPesanan,
-              this.masterBarangId
-            );
           }
         }
       }
     },
   },
   methods: {
+    onSlideStart(slide) {
+      this.sliding = true;
+    },
+    onSlideEnd(slide) {
+      this.sliding = false;
+    },
+    async getBanner() {
+      this.loading = true;
+      await this.$axios.get(`${ipBackendBanner}listAll`).then((list) => {
+        for (let i = 0; i < list.data.data.length; i++) {
+          this.items.push(list.data.data[i].fileBanner);
+        }
+        console.log(this.items);
+      });
+      this.loading = false;
+    },
     async getKategori() {
       this.loading = true;
       await this.$axios.get(`${ipBackendKategori}listAll`).then((list) => {
@@ -317,7 +293,6 @@ export default {
         this.pesanan !== ""
       ) {
         this.loading = true;
-        console.log(data);
         await this.$axios
           .post(`${ipBackendPesanan}order/${this.userId}`, data)
           .then((list) => {
@@ -330,13 +305,17 @@ export default {
             this.komisiPesanan = "";
             this.masterBarangId = "";
             this.userId = "";
+            if (confirm("Apakah anda yakin menghapus sales ini ?") == true) {
+            }
+
             alert(
               "terima kasih telah melakukan pesanan \nanda akan di hubungi oleh administari kami"
             );
+            window.location.href = "http://riteza.com/";
           });
         this.loading = false;
       } else {
-        alert("Mohon lengkapi data");
+        console.log(alert("Mohon lengkapi data"));
       }
     },
   },
@@ -416,7 +395,7 @@ td {
   font-weight: 800;
   opacity: 1;
 }
-.select option  {
+.select option {
   color: white;
   opacity: 1;
 }

@@ -1,13 +1,17 @@
 <template>
   <div variant="secondary">
     <b-nav vertical id="list">
-      <b-button block class="sidebarr d-flex justify-content-start" size="sm"
-        ><b-icon class="ml-3" icon="layers"></b-icon>
-        <div class="ml-3">Banner</div>
-      </b-button>
-      <b-button block class="d-flex justify-content-start" size="sm"
-        ><b-icon class="ml-3" icon="layers"></b-icon>
-        <div class="ml-3">Kategori</div></b-button
+      <NuxtLink style="text-decoration: none" to="/banner">
+        <b-button block class="sidebarr d-flex justify-content-start" size="sm"
+          ><b-icon class="ml-3" icon="layers"></b-icon>
+          <div class="ml-3">Banner</div>
+        </b-button></NuxtLink
+      >
+      <NuxtLink style="text-decoration: none" to="/registerkategori">
+        <b-button block class="d-flex justify-content-start" size="sm"
+          ><b-icon class="ml-3" icon="layers"></b-icon>
+          <div class="ml-3">Kategori</div></b-button
+        ></NuxtLink
       >
       <b-button block class="d-flex justify-content-start" size="sm"
         ><b-icon class="ml-3" icon="layers"></b-icon>
@@ -21,7 +25,7 @@
         ><b-icon class="ml-3" icon="person"></b-icon>
         <div class="ml-3">User</div></b-button
       >
-      <NuxtLink to="/sales"  style="text-decoration: none;">
+      <NuxtLink to="/sales" style="text-decoration: none">
         <b-button block class="d-flex justify-content-start" size="sm"
           ><b-icon class="ml-3" icon="person"></b-icon>
           <div class="ml-3">Sales</div></b-button

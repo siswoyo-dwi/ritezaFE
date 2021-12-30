@@ -126,7 +126,7 @@ export default {
         { key: "noHP" , thClass: 'bg-info text-light'},
         { key: "NIK" , thClass: 'bg-info text-light'},
         { key: "tanggal" , thClass: 'bg-info text-light'},
-        { key: "komisi" , thClass: 'bg-info text-light'},
+        { key: "fee" , thClass: 'bg-info text-light'},
         { key: "harga" , thClass: 'bg-info text-light'},
         { key: "status" , thClass: 'bg-info text-light'},
       ],
@@ -175,8 +175,8 @@ export default {
               tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
                 "LL"
               ),
-              komisi: list.data.data[i].komisiPesanan,
-              harga: list.data.data[i].hargaBarang,
+              fee: `${list.data.data[i].komisiPesanan}%`,
+              harga: `Rp ${new Intl.NumberFormat(['ban', 'id']).format(list.data.data[i].hargaBarang)}`,
               status: list.data.data[i].statusPesanan,
             });
           }

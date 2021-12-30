@@ -16,6 +16,12 @@
               <b-button variant="primary" @click="copy()">Copy</b-button>
             </b-col>
           </b-row>
+          <p
+            style="color: blue; font-weight: 800; font-size: 30px"
+            class="d-flex justify-content-center align-items-center"
+          >
+            DAFTAR PESANAN SALES
+          </p>
 
           <b-table
             bordered
@@ -25,6 +31,49 @@
             :current-page="currentPage"
             class="mt-5"
           >
+            <template #cell(status)="row">
+              <b-alert
+                v-model="showAlasanPenolakan"
+                variant="danger"
+                dismissible
+                >{{ row.item.alasanPenolakan }}
+              </b-alert>
+
+              <b-button
+                size="sm"
+                v-if="row.item.status == 'di tolak'"                @click="showAlasanPenolakan = true"
+                variant="outline-primary"
+                >{{ row.item.status }}
+              </b-button>
+               <b-button
+                size="sm"
+                v-else
+                variant="outline-primary"
+                >{{ row.item.status }}
+              </b-button>
+            </template>
+
+            <template #cell(bukti)="row">
+              <b-alert v-model="showBuktiTransfer" variant="danger" dismissible>
+                <b-img
+                  style="width: 200px; height: 200px"
+                  :src="`${ipBackend}${row.item.buktiTransaksi}`"
+                >
+                </b-img>
+              </b-alert>
+              <b-button
+                size="sm"
+                v-if="row.item.status == 'di terima'"
+                variant="outline-primary"
+                @click="showBuktiTransfer = true"
+                class="mr-2"
+              >
+                <b-icon icon="layers"></b-icon>
+              </b-button>
+              <b-button size="sm" v-else variant="outline-primary" class="mr-2">
+                <b-icon icon="layers"></b-icon>
+              </b-button>
+            </template>
           </b-table>
           <b-pagination
             v-model="currentPage"
@@ -41,6 +90,7 @@
 import {
   ipBackendPesanan,
   ipBackendUser,
+  ipBackend,
   ipBackendBarang,
 } from "../assets/js/ipBeckEnd";
 import { BIcon, BIconChevronDoubleRight } from "bootstrap-vue";
@@ -52,6 +102,9 @@ export default {
   },
   data() {
     return {
+      showBuktiTransfer: false,
+      showAlasanPenolakan: false,
+      ipBackend: ipBackend,
       loading: false,
       pesanan: null,
       barang: null,
@@ -72,21 +125,22 @@ export default {
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
-        { key: "nomor", thClass: "bg-info text-light" },
+        { key: "no", thClass: "bg-info text-light" },
         { key: "nama", thClass: "bg-info text-light" },
         { key: "pesanan", thClass: "bg-info text-light" },
         { key: "noHP", thClass: "bg-info text-light" },
         { key: "NIK", thClass: "bg-info text-light" },
         { key: "tanggal", thClass: "bg-info text-light" },
-        { key: "komisi", thClass: "bg-info text-light" },
         { key: "harga", thClass: "bg-info text-light" },
+        { key: "fee", thClass: "bg-info text-light" },
         { key: "status", thClass: "bg-info text-light" },
+        { key: "bukti", thClass: "bg-info text-light" },
       ],
       items: [],
       options1: [],
       options2: [],
       options3: [],
-      profil:"",
+      profil: "",
     };
   },
   components: {
@@ -103,6 +157,9 @@ export default {
     this.loading = false;
   },
   methods: {
+    showAlert() {
+      this.dismissCountDown = this.dismissSecs;
+    },
     async getProfil() {
       this.loading = true;
 
@@ -133,10 +190,17 @@ export default {
             this.pesanan = list.data.data.length;
             if (list.data.data.length > 0) {
               for (let i = 0; i < list.data.data.length; i++) {
+                const fee =
+                  (list.data.data[i].komisiPesanan *
+                    list.data.data[i].hargaBarang) /
+                  100;
+
                 this.options2.push(list.data.data[i].namaPemesan);
                 this.items.push({
+                  alasanPenolakan: list.data.data[i].alasanPenolakan,
+                  buktiTransaksi: list.data.data[i].buktiTransaksi,
                   id: list.data.data[i].pesananId,
-                  nomor: i + 1,
+                  no: i + 1,
                   nama: list.data.data[i].namaPemesan,
                   alamat: list.data.data[i].alamatPemesan,
                   pesanan: list.data.data[i].namaBarang,
@@ -145,10 +209,21 @@ export default {
                   tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
                     "LL"
                   ),
-                  komisi: list.data.data[i].komisiPesanan,
-                  harga: list.data.data[i].hargaBarang,
+                  fee: `${
+                    list.data.data[i].komisiPesanan
+                  }% | Rp ${new Intl.NumberFormat(["ban", "id"]).format(fee)}`,
+                  harga: `Rp ${new Intl.NumberFormat(["ban", "id"]).format(
+                    list.data.data[i].hargaBarang
+                  )}`,
                   status: list.data.data[i].statusPesanan,
                 });
+                if (list.data.data[i].statusPesanan == 0) {
+                  this.items[i].status = "di proses";
+                } else if (list.data.data[i].statusPesanan == 1) {
+                  this.items[i].status = "di terima";
+                } else {
+                  this.items[i].status = "di tolak";
+                }
               }
             }
 
@@ -184,7 +259,6 @@ export default {
               ),
               komisi: list.data.data[i].komisiPesanan,
               harga: list.data.data[i].hargaBarang,
-              status: list.data.data[i].statusPesanan,
             });
           }
         }

@@ -43,23 +43,23 @@
           <b-badge variant="danger">{{ pesananBaru }}</b-badge>
         </h6>
         <NuxtLink class="navbarLayoutDefault ml-5" to="/register">
-          <div @click="add()">Register Sales</div>
+          <div>Register Sales</div>
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listsales"
-          ><div @click="add()">List Sales</div>
+          ><div>List Sales</div>
         </NuxtLink>
 
         <NuxtLink class="navbarLayoutDefault ml-3" to="/registerbarang"
-          ><div @click="add()">Barang/Jasa</div>
+          ><div>Barang/Jasa</div>
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listdatabarang"
-          ><div @click="add()">List Barang</div>
+          ><div>List Barang</div>
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/registerkategori"
-          ><div @click="add()">Register Kategori</div>
+          ><div>Register Kategori</div>
         </NuxtLink>
         <NuxtLink class="navbarLayoutDefault ml-3" to="/listpesanan"
-          ><div @click="add()">List Pesanan</div>
+          ><div>List Pesanan</div>
         </NuxtLink>
 
         <NuxtLink class="navbarLayoutDefault ml-3" to="/"

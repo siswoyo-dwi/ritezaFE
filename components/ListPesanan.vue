@@ -162,19 +162,19 @@ export default {
       produk: null,
       produkId: null,
       options4: [
-        { value: 0, text: "Diproses" },
+        { value: '0', text: "Diproses" },
         { value: 1, text: "Diterima" },
         { value: 2, text: "Ditolak" },
       ],
       loading: false,
       ipBackendPesanan: ipBackendPesanan,
       fields: [
-        { key: "nomor", thClass: "bg-info text-light" },
-        { key: "nama", thClass: "bg-info text-light" },
+        { key: "no", thClass: "bg-info text-light" },
+        { key: "client", thClass: "bg-info text-light" },
         { key: "pesanan", thClass: "bg-info text-light" },
         { key: "sales", thClass: "bg-info text-light" },
         { key: "tanggal", thClass: "bg-info text-light" },
-        { key: "komisi", thClass: "bg-info text-light" },
+        { key: "fee", thClass: "bg-info text-light" },
         { key: "harga", thClass: "bg-info text-light" },
         { key: "status", thClass: "bg-info text-light" },
         { key: "update", thClass: "bg-info text-light" },
@@ -221,14 +221,16 @@ export default {
       this.loading = true;
 
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
+        console.log(list);
         if (list.data.data.length > 0) {
+          const array = []
           for (let i = 0; i < list.data.data.length; i++) {
-            this.options2.push(list.data.data[i].namaPemesan);
+            array.push(list.data.data[i].namaPemesan);
             this.items.push({
               nomor: i,
               id: list.data.data[i].pesananId,
-              nomor: i + 1,
-              nama: list.data.data[i].namaPemesan,
+              no: i + 1,
+              client: list.data.data[i].namaPemesan,
               sales: list.data.data[i].username,
               pesanan: list.data.data[i].namaBarang,
               alamat: list.data.data[i].alamatPemesan,
@@ -237,10 +239,20 @@ export default {
               tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
                 "LL"
               ),
-              komisi: list.data.data[i].komisiPesanan,
-              harga: list.data.data[i].hargaBarang,
+              fee: `${list.data.data[i].komisiPesanan}%`,
+              harga: `Rp ${new Intl.NumberFormat(['ban', 'id']).format(list.data.data[i].hargaBarang)}`,
               status: list.data.data[i].statusPesanan,
             });
+
+            if (list.data.data[i].statusPesanan == 0) {
+              this.items[i].status = "di proses";
+            } else if (list.data.data[i].statusPesanan == 1) {
+              this.items[i].status = "di terima";
+            } else {
+              this.items[i].status = "di tolak";
+            }
+            this.options2 =[...new Set(array)];
+
           }
         }
         this.loading = false;
@@ -270,15 +282,17 @@ export default {
           for (let i = 0; i < list.data.data.length; i++) {
             this.items.push({
               id: list.data.data[i].pesananId,
-              nomor: i + 1,
-              nama: list.data.data[i].namaPemesan,
+              no: i + 1,
+              client: list.data.data[i].namaPemesan,
               alamat: list.data.data[i].alamatPemesan,
               noHP: list.data.data[i].noHPPemesan,
               NIK: list.data.data[i].NIKPemesan,
               tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
                 "LL"
               ),
-              komisi: list.data.data[i].komisiPesanan,
+              sales: list.data.data[i].username,
+              pesanan: list.data.data[i].namaBarang,
+              fee: `${list.data.data[i].komisiPesanan}%`,
               harga: list.data.data[i].hargaBarang,
               status: list.data.data[i].statusPesanan,
             });
@@ -289,6 +303,11 @@ export default {
     },
   },
   watch: {
+    async statusPesanan(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        console.log(newValue, oldValue);
+      }
+    },
     async sales(newValue, oldValue) {
       if (newValue !== oldValue) {
         for (let i = 0; i < this.dataSales.length; i++) {
