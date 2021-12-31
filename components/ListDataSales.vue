@@ -71,7 +71,7 @@ export default {
       items: [],
       loading: false,
       fields: [
-        { key: "nomor", thClass: "bg-info text-light" },
+        { key: "no", thClass: "bg-info text-light" },
         { key: "username", sortable: false, thClass: "bg-info text-light" },
         { key: "noHp", sortable: false, thClass: "bg-info text-light" },
         { key: "jenisKelamin", sortable: false, thClass: "bg-info text-light" },
@@ -98,15 +98,19 @@ export default {
   methods: {
     async getDataSales() {
       this.loading = true;
-
+      this.items = [];
       await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
         if (list.data.data.length > 0) {
-          this.items = list.data.data;
+          for (let i = 0; i < list.data.data.length; i++) {
+            if (list.data.data[i].role == "sales") {
+              this.items.push(list.data.data[i])
+            }
+          }
           for (let i = 0; i < this.items.length; i++) {
-            this.items[i].nomor = i + 1;
+              this.items[i].no = i+1
+            console.log(this.items[i]);
           }
         } else {
-          this.items = [{ nama: "-", noHp: "-", jenisKelamin: "-" }];
         }
         this.loading = false;
       });

@@ -32,34 +32,29 @@
             class="mt-5"
           >
             <template #cell(status)="row">
-              <b-alert
+              <b-modal
                 v-model="showAlasanPenolakan"
                 variant="danger"
                 dismissible
                 >{{ row.item.alasanPenolakan }}
-              </b-alert>
+              </b-modal>
 
               <b-button
                 size="sm"
-                v-if="row.item.status == 'di tolak'"                @click="showAlasanPenolakan = true"
+                v-if="row.item.status == 'di tolak'"
+                @click="showAlasanPenolakan = true"
                 variant="outline-primary"
                 >{{ row.item.status }}
               </b-button>
-               <b-button
-                size="sm"
-                v-else
-                variant="outline-primary"
+              <b-button size="sm" v-else variant="outline-primary"
                 >{{ row.item.status }}
               </b-button>
             </template>
 
             <template #cell(bukti)="row">
-              <b-alert v-model="showBuktiTransfer" variant="danger" dismissible>
-                <b-img
-                  :src="`${ipBackend}${row.item.buktiTransaksi}`"
-                >
-                </b-img>
-              </b-alert>
+              <b-modal v-model="showBuktiTransfer" variant="danger" dismissible>
+                <b-img fluid :src="`${ipBackend}${row.item.buktiTransaksi}`"> </b-img>
+              </b-modal>
               <b-button
                 size="sm"
                 v-if="row.item.status == 'di terima'"
@@ -170,6 +165,7 @@ export default {
       this.loading = true;
 
       await this.$axios.get(`${ipBackendBarang}listAll`).then((list) => {
+        console.log(list);
         this.dataBarang = list.data.data;
         for (let i = 0; i < this.dataBarang.length; i++) {
           this.options3.push(this.dataBarang[i].namaBarang);
@@ -185,6 +181,7 @@ export default {
       await this.$axios
         .get(`${ipBackendPesanan}listByUserId/${this.id}`)
         .then((list) => {
+          console.log(list);
           if (list.data.message !== "anda belum login") {
             this.pesanan = list.data.data.length;
             if (list.data.data.length > 0) {
@@ -281,9 +278,7 @@ export default {
     async getLink() {
       await this.$axios.get(`${ipBackendUser}getLink`).then((link) => {
         if (link.data.message !== "anda belum login") {
-          this.link =
-            `http://localhost:3000/` +
-            link.data.data.slice(22, link.data.data.length);
+          this.link =link.data.data
           this.loading = false;
         } else {
           this.$router.push({ path: "/" });

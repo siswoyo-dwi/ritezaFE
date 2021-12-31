@@ -82,7 +82,7 @@ export default {
             this.$router.push({ path: "/dashboard" });
             await this.getPesananBaru();
             this.$nuxt.$emit("eventName", this.pesananBaru);
-            alert(res.data.message);
+            alert(res);
             this.loading = false;
           })
           .catch((err) => {

@@ -162,7 +162,7 @@ export default {
       produk: null,
       produkId: null,
       options4: [
-        { value: '0', text: "Diproses" },
+        { value: "0", text: "Diproses" },
         { value: 1, text: "Diterima" },
         { value: 2, text: "Ditolak" },
       ],
@@ -200,7 +200,9 @@ export default {
       await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
         this.dataSales = list.data.data;
         for (let i = 0; i < this.dataSales.length; i++) {
-          this.options1.push(this.dataSales[i].username);
+          if (this.dataSales[i].role == "sales") {
+            this.options1.push(this.dataSales[i].username);
+          }
         }
         this.loading = false;
       });
@@ -221,9 +223,8 @@ export default {
       this.loading = true;
 
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
-        console.log(list);
         if (list.data.data.length > 0) {
-          const array = []
+          const array = [];
           for (let i = 0; i < list.data.data.length; i++) {
             array.push(list.data.data[i].namaPemesan);
             this.items.push({
@@ -240,10 +241,11 @@ export default {
                 "LL"
               ),
               fee: `${list.data.data[i].komisiPesanan}%`,
-              harga: `Rp ${new Intl.NumberFormat(['ban', 'id']).format(list.data.data[i].hargaBarang)}`,
+              harga: `Rp ${new Intl.NumberFormat(["ban", "id"]).format(
+                list.data.data[i].hargaBarang
+              )}`,
               status: list.data.data[i].statusPesanan,
             });
-
             if (list.data.data[i].statusPesanan == 0) {
               this.items[i].status = "di proses";
             } else if (list.data.data[i].statusPesanan == 1) {
@@ -251,8 +253,7 @@ export default {
             } else {
               this.items[i].status = "di tolak";
             }
-            this.options2 =[...new Set(array)];
-
+            this.options2 = [...new Set(array)];
           }
         }
         this.loading = false;
@@ -294,8 +295,14 @@ export default {
               pesanan: list.data.data[i].namaBarang,
               fee: `${list.data.data[i].komisiPesanan}%`,
               harga: list.data.data[i].hargaBarang,
-              status: list.data.data[i].statusPesanan,
             });
+            if (list.data.data[i].statusPesanan == 0) {
+              this.items[i].status = "di proses";
+            } else if (list.data.data[i].statusPesanan == 1) {
+              this.items[i].status = "di terima";
+            } else {
+              this.items[i].status = "di tolak";
+            }
           }
         }
         this.loading = false;

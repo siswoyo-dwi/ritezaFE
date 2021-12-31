@@ -107,6 +107,7 @@ export default {
     return {
       loading: false,
       sales: null,
+      items:[],
       barang: null,
       pesanan: null,
       pesananBaru: "",
@@ -157,7 +158,11 @@ export default {
       if (this.id) {
         await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
           if (list.data.message !== "anda belum login") {
-            this.sales = list.data.data.length;
+            for (let i = 0; i < list.data.data.length; i++) {
+              if (list.data.data[i].role == "sales") {
+                this.items.push(list.data.data[i]);
+              }
+            }this.sales= this.items.length
             this.loading = false;
           } else {
             this.$router.push({ path: "/" });

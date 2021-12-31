@@ -79,8 +79,17 @@
               >show password</label
             >
           </div>
-          <b-button type="submit" v-if="loading" disabled variant="primary" block>Submit</b-button>
-          <b-button type="submit" v-else variant="primary" block>Submit</b-button>
+          <b-button
+            type="submit"
+            v-if="loading"
+            disabled
+            variant="primary"
+            block
+            >Submit</b-button
+          >
+          <b-button type="submit" v-else variant="primary" block
+            >Submit</b-button
+          >
         </form>
       </div>
     </b-card>
@@ -112,7 +121,7 @@ export default {
 
       await this.$axios.get(`${ipBackendUser}profil`).then((list) => {
         this.profil = list.data.data[0].username;
-        console.log(this.profil);
+        this.loading = false;
       });
     },
     async onSubmit(event) {
@@ -128,7 +137,8 @@ export default {
         if (data) {
           await this.$axios
             .post(`${ipBackendUser}changePassword`, data)
-            .then(async () => {
+            .then(async (data) => {
+              alert(data.data.message);
               let login = {
                 username: this.profil,
                 password: this.form.passwordBaru,
@@ -139,12 +149,15 @@ export default {
                   console.log(res);
                   if (res.data.token) {
                     this.loading = false;
-
                     localStorage.setItem("token", res.data.token);
                     alert(res.data.message);
-
                     this.$router.push({ path: "/" });
+                  } else {
+                    this.loading = false;
                   }
+                })
+                .catch(() => {
+                  this.loading = false;
                 });
             })
             .catch((error) => {
@@ -154,6 +167,7 @@ export default {
             });
         }
       } else {
+        this.loading = false;
         alert("password baru belum sesuai");
       }
     },

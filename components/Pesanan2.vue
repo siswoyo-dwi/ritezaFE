@@ -62,6 +62,7 @@
                   placeholder="NIK"
                   size="sm"
                   v-model="NIKPemesan"
+                  maxlength="16"
                   required
                 ></b-form-input>
 
@@ -69,6 +70,7 @@
                   class="mt-4"
                   size="sm"
                   placeholder="No. HP"
+                  maxlength="13"
                   v-model="noHPPemesan"
                   required
                 ></b-form-input>
@@ -255,6 +257,7 @@ export default {
     async getKategori() {
       this.loading = true;
       await this.$axios.get(`${ipBackendKategori}listAll`).then((list) => {
+        console.log(list);
         this.listKategori = list.data.data;
         for (let i = 0; i < this.listKategori.length; i++) {
           this.kategori.push(this.listKategori[i].namaKategori);
@@ -305,8 +308,6 @@ export default {
             this.komisiPesanan = "";
             this.masterBarangId = "";
             this.userId = "";
-            if (confirm("Apakah anda yakin menghapus sales ini ?") == true) {
-            }
 
             alert(
               "terima kasih telah melakukan pesanan \nanda akan di hubungi oleh administari kami"

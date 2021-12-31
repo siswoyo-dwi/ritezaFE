@@ -20,7 +20,7 @@
               required
             >
               <template #first>
-                <b-form-select-option :value="null" disabled
+                <b-form-select-option :value="0" disabled
                   >-- Please select an option --</b-form-select-option
                 >
               </template>
@@ -144,6 +144,7 @@ export default {
         alasanPenolakan: this.alasanPenolakan,
       };
       try {
+        console.log(data);
         await this.$axios
           .post(`${ipBackendPesanan}update`, data)
         await this.$axios
