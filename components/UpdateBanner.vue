@@ -62,7 +62,7 @@
           v-model="status"
           size="sm"
           variant="outline-primary"
-          @dblclick="cancel(row)"
+          @click="cancel(row)"
           class="mr-2"
         >
           <b-icon icon="trash"></b-icon>

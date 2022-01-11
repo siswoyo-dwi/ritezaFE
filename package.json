@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt --port 8866" ,
+    "dev": "nuxt --port 8866",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxt/http": "^0.6.4",
     "@nuxtjs/auth-next": "5.0.0-1637745161.ea53f98",
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/composition-api": "^0.31.0",
     "@nuxtjs/moment": "^1.6.1",
     "bootstrap": "^4.6.1",
     "bootstrap-vue": "^2.21.2",

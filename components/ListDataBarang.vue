@@ -14,7 +14,7 @@
           size="sm"
           v-model="status"
           variant="outline-primary"
-          @dblclick="update(row)"
+          @click="update(row)"
           class="mr-2"
         >
           <b-icon icon="pencil"></b-icon>
@@ -27,7 +27,7 @@
           :per-page="perPage"
           :current-page="currentPage"
           variant="outline-primary"
-          @dblclick="cancel(row)"
+          @click="cancel(row)"
           class="mr-2"
         >
           <b-icon icon="trash"></b-icon>
@@ -115,7 +115,7 @@ export default {
     },
     async cancel(index) {
       if (confirm("Apakah anda yakin menghapus barang ini ?") == true) {
-        const id = index.item.id;
+        const id = index.item.masterBarangId;
         await this.$axios
           .post(`${ipBackendBarang}delete`, {
             id: id,

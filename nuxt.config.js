@@ -18,7 +18,7 @@ export default {
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [`@assets/css/bootstrap.min.css`],
-  js: [`@assets/js/bootstrap.min.js`,`@assets/js/popper.min.js`],
+  js: [`@assets/js/bootstrap.min.js`, `@assets/js/popper.min.js`],
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: ["~/plugins/axios.js"],
 
@@ -26,19 +26,23 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ["@nuxtjs/moment"],
+  buildModules: ["@nuxtjs/moment", "@nuxtjs/composition-api/module"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/bootstrap
     "bootstrap-vue/nuxt",
+    '@nuxt/http',
     // https://go.nuxtjs.dev/axios
     "@nuxtjs/axios",
     "@nuxtjs/auth-next",
   ],
   moment: {
-    defaultLocale: 'id',
-    locales: ['id']
+    defaultLocale: "id",
+    locales: ["id"],
+  },
+  http: {
+    // options
   },
   // router: {
   //   middleware: 'index',

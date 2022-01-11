@@ -1,5 +1,5 @@
 <template>
-  <UpdateSales />
+  <UpdateSalesAdmin />
 </template>
 
 <script>

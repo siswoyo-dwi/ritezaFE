@@ -103,7 +103,7 @@
           <b-button
             size="sm"
             variant="outline-primary"
-            @dblclick="update(row)"
+            @click="update(row)"
             class="mr-2"
           >
             <b-icon icon="pencil"></b-icon>
@@ -113,10 +113,20 @@
           <b-button
             size="sm"
             variant="outline-primary"
-            @dblclick="goTo(row)"
+            @click="goTo(row)"
             class="mr-2"
           >
             <b-icon icon="layers"></b-icon>
+          </b-button>
+        </template>
+        <template #cell(delete)="row">
+          <b-button
+            size="sm"
+            variant="outline-primary"
+            @click="cancel(row)"
+            class="mr-2"
+          >
+            <b-icon icon="trash"></b-icon>
           </b-button>
         </template>
       </b-table>
@@ -135,12 +145,13 @@ import {
   ipBackendUser,
   ipBackendBarang,
 } from "../assets/js/ipBeckEnd";
-import { BIcon, BIconPencil, BIconLayers } from "bootstrap-vue";
+import { BIcon, BIconPencil, BIconLayers, BIconTrash } from "bootstrap-vue";
 export default {
   components: {
     BIcon,
     BIconPencil,
     BIconLayers,
+    BIconTrash,
   },
   computed: {
     rows() {
@@ -179,11 +190,13 @@ export default {
         { key: "status", thClass: "bg-info text-light" },
         { key: "update", thClass: "bg-info text-light" },
         { key: "detail", thClass: "bg-info text-light" },
+        { key: "delete", thClass: "bg-info text-light" },
       ],
       items: [],
       options1: [],
       options2: [],
       options3: [],
+      status: 0,
     };
   },
   async created() {
@@ -195,6 +208,26 @@ export default {
     this.loading = false;
   },
   methods: {
+    async cancel(index) {
+      if (confirm("Apakah anda yakin menghapus pesanan ini ?") == true) {
+        const id = index.item.id;
+        await this.$axios
+          .post(`${ipBackendPesanan}delete`, {
+            id: id,
+          })
+          .then((res) => {
+            console.log(res);
+            if (this.status == 0) {
+              this.status = 1;
+            } else {
+              this.status = 0;
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+    },
     async getDataSales() {
       this.loading = true;
       await this.$axios.get(`${ipBackendUser}listAll`).then((list) => {
@@ -221,41 +254,84 @@ export default {
     },
     async getPesanan() {
       this.loading = true;
-
+      this.items = [];
       await this.$axios.post(`${ipBackendPesanan}list`).then((list) => {
         if (list.data.data.length > 0) {
           const array = [];
-          for (let i = 0; i < list.data.data.length; i++) {
-            array.push(list.data.data[i].namaPemesan);
+          list.data.data.forEach((e,i) => {
+            console.log(e.namaPemesan);
+             array.push(e.namaPemesan);
             this.items.push({
               nomor: i,
-              id: list.data.data[i].pesananId,
-              no: i + 1,
-              client: list.data.data[i].namaPemesan,
-              sales: list.data.data[i].username,
-              pesanan: list.data.data[i].namaBarang,
-              alamat: list.data.data[i].alamatPemesan,
-              noHP: list.data.data[i].noHPPemesan,
-              NIK: list.data.data[i].NIKPemesan,
-              tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
-                "LL"
-              ),
-              fee: `${list.data.data[i].komisiPesanan}%`,
+              id: e.pesananId,
+              client: e.namaPemesan,
+              sales: e.username,
+              pesanan: e.namaBarang,
+              alamat: e.alamatPemesan,
+              noHP: e.noHPPemesan,
+              NIK: e.NIKPemesan,
+              tanggal: this.$moment(e.tanggalPesan).format("l"),
+              tanggalPesan: e.tanggalPesan,
+              createdAt: e.createdAt,
+              fee: `${e.komisiPesanan}%`,
               harga: `Rp ${new Intl.NumberFormat(["ban", "id"]).format(
-                list.data.data[i].hargaBarang
+                e.hargaBarang
               )}`,
-              status: list.data.data[i].statusPesanan,
+              status: e.statusPesanan,
             });
-            if (list.data.data[i].statusPesanan == 0) {
-              this.items[i].status = "di proses";
-            } else if (list.data.data[i].statusPesanan == 1) {
-              this.items[i].status = "di terima";
+            if (e.statusPesanan == 0) {
+              this.items.status = "di proses";
+            } else if (e.statusPesanan == 1) {
+              this.items.status = "di terima";
             } else {
-              this.items[i].status = "di tolak";
+              this.items.status = "di tolak";
             }
+
+            this.items.sort((a, b) => {
+              return new Date(b.tanggalPesan) - new Date(a.tanggalPesan);
+            });
+
             this.options2 = [...new Set(array)];
-          }
+          });
+        //   for (let i = 0; i < list.data.data.length; i++) {
+        //     array.push(list.data.data[i].namaPemesan);
+        //     this.items.push({
+        //       nomor: i,
+        //       id: list.data.data[i].pesananId,
+        //       client: list.data.data[i].namaPemesan,
+        //       sales: list.data.data[i].username,
+        //       pesanan: list.data.data[i].namaBarang,
+        //       alamat: list.data.data[i].alamatPemesan,
+        //       noHP: list.data.data[i].noHPPemesan,
+        //       NIK: list.data.data[i].NIKPemesan,
+        //       tanggal: this.$moment(list.data.data[i].tanggalPesan).format("l"),
+        //       tanggalPesan: list.data.data[i].tanggalPesan,
+        //       createdAt: list.data.data[i].createdAt,
+        //       fee: `${list.data.data[i].komisiPesanan}%`,
+        //       harga: `Rp ${new Intl.NumberFormat(["ban", "id"]).format(
+        //         list.data.data[i].hargaBarang
+        //       )}`,
+        //       status: list.data.data[i].statusPesanan,
+        //     });
+        //     if (list.data.data[i].statusPesanan == 0) {
+        //       this.items[i].status = "di proses";
+        //     } else if (list.data.data[i].statusPesanan == 1) {
+        //       this.items[i].status = "di terima";
+        //     } else {
+        //       this.items[i].status = "di tolak";
+        //     }
+
+        //     this.items.sort((a, b) => {
+        //       return new Date(b.tanggalPesan) - new Date(a.tanggalPesan);
+        //     });
+
+        //     this.options2 = [...new Set(array)];
+        //   }
         }
+        for (let k = 0; k < this.items.length; k++) {
+          this.items[k].no = k + 1;
+        }
+
         this.loading = false;
       });
     },
@@ -283,7 +359,6 @@ export default {
           for (let i = 0; i < list.data.data.length; i++) {
             this.items.push({
               id: list.data.data[i].pesananId,
-              no: i + 1,
               client: list.data.data[i].namaPemesan,
               alamat: list.data.data[i].alamatPemesan,
               noHP: list.data.data[i].noHPPemesan,
@@ -310,16 +385,54 @@ export default {
     },
   },
   watch: {
-    async statusPesanan(newValue, oldValue) {
+    async status(newValue, oldValue) {
+      this.spinner = true;
+
       if (newValue !== oldValue) {
-        console.log(newValue, oldValue);
+        await this.getPesanan();
       }
     },
+
     async sales(newValue, oldValue) {
+      console.log(newValue, oldValue);
       if (newValue !== oldValue) {
         for (let i = 0; i < this.dataSales.length; i++) {
           if (this.dataSales[i].username == this.sales) {
             this.salesId = this.dataSales[i].id;
+            let data = { id: this.salesId };
+            this.items = [];
+            await this.$axios
+              .post(`${ipBackendPesanan}list`, data)
+              .then((list) => {
+                console.log(list);
+                if (list.data.data.length > 0) {
+                  for (let i = 0; i < list.data.data.length; i++) {
+                    this.items.push({
+                      id: list.data.data[i].pesananId,
+                      no: i + 1,
+                      client: list.data.data[i].namaPemesan,
+                      alamat: list.data.data[i].alamatPemesan,
+                      noHP: list.data.data[i].noHPPemesan,
+                      NIK: list.data.data[i].NIKPemesan,
+                      tanggal: this.$moment(
+                        list.data.data[i].tanggalPesan
+                      ).format("LL"),
+                      sales: list.data.data[i].username,
+                      pesanan: list.data.data[i].namaBarang,
+                      fee: `${list.data.data[i].komisiPesanan}%`,
+                      harga: list.data.data[i].hargaBarang,
+                    });
+                    if (list.data.data[i].statusPesanan == 0) {
+                      this.items[i].status = "di proses";
+                    } else if (list.data.data[i].statusPesanan == 1) {
+                      this.items[i].status = "di terima";
+                    } else {
+                      this.items[i].status = "di tolak";
+                    }
+                  }
+                }
+                this.loading = false;
+              });
           }
         }
       }

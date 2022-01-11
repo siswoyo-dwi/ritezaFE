@@ -36,24 +36,32 @@
                 v-model="showAlasanPenolakan"
                 variant="danger"
                 dismissible
-                >{{ row.item.alasanPenolakan }}
+                ><p>{{ row.item.alasanPenolakan }}</p>
               </b-modal>
 
-              <b-button
+              <div
                 size="sm"
                 v-if="row.item.status == 'di tolak'"
                 @click="showAlasanPenolakan = true"
                 variant="outline-primary"
-                >{{ row.item.status }}
-              </b-button>
-              <b-button size="sm" v-else variant="outline-primary"
-                >{{ row.item.status }}
-              </b-button>
+              >
+                {{ row.item.status }}
+              </div>
+              <div size="sm" v-else variant="outline-primary">
+                {{ row.item.status }}
+              </div>
             </template>
 
             <template #cell(bukti)="row">
               <b-modal v-model="showBuktiTransfer" variant="danger" dismissible>
-                <b-img fluid :src="`${ipBackend}${row.item.buktiTransaksi}`"> </b-img>
+                <b-img fluid :src="`${ipBackend}${row.item.buktiTransaksi}`">
+                </b-img>
+                <a
+                  :href="`${ipBackend}pesanan//downloadBuktiTrf/${row.item.pesananId}`"
+                  download
+                >
+                  <b-button class="mt-2">Download</b-button>
+                </a>
               </b-modal>
               <b-button
                 size="sm"
@@ -165,11 +173,14 @@ export default {
       this.loading = true;
 
       await this.$axios.get(`${ipBackendBarang}listAll`).then((list) => {
-        console.log(list);
+        console.log('getbarang',list);
         this.dataBarang = list.data.data;
-        for (let i = 0; i < this.dataBarang.length; i++) {
-          this.options3.push(this.dataBarang[i].namaBarang);
-        }
+        // for (let i = 0; i < this.dataBarang.length; i++) {
+        //   this.options3.push(this.dataBarang[i].namaBarang);
+        // }
+        this.dataBarang.forEach((e) => {
+          this.options3.push(e.namaBarang);
+        });
       });
 
       this.loading = false;
@@ -181,11 +192,11 @@ export default {
       await this.$axios
         .get(`${ipBackendPesanan}listByUserId/${this.id}`)
         .then((list) => {
-          console.log(list);
+          console.log('getpesanan',list);
           if (list.data.message !== "anda belum login") {
             this.pesanan = list.data.data.length;
             if (list.data.data.length > 0) {
-              for (let i = 0; i < list.data.data.length; i++) {
+              list.data.data.forEach((e) => {
                 const fee =
                   (list.data.data[i].komisiPesanan *
                     list.data.data[i].hargaBarang) /
@@ -195,11 +206,12 @@ export default {
                 this.items.push({
                   alasanPenolakan: list.data.data[i].alasanPenolakan,
                   buktiTransaksi: list.data.data[i].buktiTransaksi,
-                  id: list.data.data[i].pesananId,
+                  id: list.data.data[i].id,
                   no: i + 1,
                   nama: list.data.data[i].namaPemesan,
                   alamat: list.data.data[i].alamatPemesan,
                   pesanan: list.data.data[i].namaBarang,
+                  pesananId: list.data.data[i].pesananId,
                   noHP: list.data.data[i].noHPPemesan,
                   NIK: list.data.data[i].NIKPemesan,
                   tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
@@ -220,7 +232,44 @@ export default {
                 } else {
                   this.items[i].status = "di tolak";
                 }
-              }
+              });
+              // for (let i = 0; i < list.data.data.length; i++) {
+              //   const fee =
+              //     (list.data.data[i].komisiPesanan *
+              //       list.data.data[i].hargaBarang) /
+              //     100;
+
+              //   this.options2.push(list.data.data[i].namaPemesan);
+              //   this.items.push({
+              //     alasanPenolakan: list.data.data[i].alasanPenolakan,
+              //     buktiTransaksi: list.data.data[i].buktiTransaksi,
+              //     id: list.data.data[i].id,
+              //     no: i + 1,
+              //     nama: list.data.data[i].namaPemesan,
+              //     alamat: list.data.data[i].alamatPemesan,
+              //     pesanan: list.data.data[i].namaBarang,
+              //     pesananId: list.data.data[i].pesananId,
+              //     noHP: list.data.data[i].noHPPemesan,
+              //     NIK: list.data.data[i].NIKPemesan,
+              //     tanggal: this.$moment(list.data.data[i].tanggalPesan).format(
+              //       "LL"
+              //     ),
+              //     fee: `${
+              //       list.data.data[i].komisiPesanan
+              //     }% | Rp ${new Intl.NumberFormat(["ban", "id"]).format(fee)}`,
+              //     harga: `Rp ${new Intl.NumberFormat(["ban", "id"]).format(
+              //       list.data.data[i].hargaBarang
+              //     )}`,
+              //     status: list.data.data[i].statusPesanan,
+              //   });
+              //   if (list.data.data[i].statusPesanan == 0) {
+              //     this.items[i].status = "di proses";
+              //   } else if (list.data.data[i].statusPesanan == 1) {
+              //     this.items[i].status = "di terima";
+              //   } else {
+              //     this.items[i].status = "di tolak";
+              //   }
+              // }
             }
 
             this.loading = false;
@@ -278,7 +327,7 @@ export default {
     async getLink() {
       await this.$axios.get(`${ipBackendUser}getLink`).then((link) => {
         if (link.data.message !== "anda belum login") {
-          this.link =link.data.data
+          this.link = link.data.data;
           this.loading = false;
         } else {
           this.$router.push({ path: "/" });

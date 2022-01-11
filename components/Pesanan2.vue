@@ -2,153 +2,176 @@
   <div class="container-fluid" id="bg-pesanan" style="margin: 0; padding: 0">
     <div>
       <template>
-        <b-row style="margin: 0; padding: 0">
-          <b-col
-            class="col-lg-6 col-sm-12 col-12 col-md-12 mb-5"
-            style="margin: 0; padding: 0"
+        <b-carousel
+          id="carousel-1"
+          v-model="slide"
+          :interval="4000"
+          controls
+          indicators
+          background="#ababab"
+          img-width="1024"
+          img-height="480"
+          style="text-shadow: 1px 1px 2px #333"
+          @sliding-start="onSlideStart"
+          @sliding-end="onSlideEnd"
+        >
+          <!-- Text slides with image -->
+          <b-carousel-slide
+            v-for="item in items"
+            :key="item.id"
+            :img-src="`${ipBackend}${item}`"
           >
-            <b-carousel
-              id="carousel-1"
-              v-model="slide"
-              :interval="4000"
-              controls
-              indicators
-              background="#ababab"
-              img-width="1024"
-              img-height="480"
-              style="text-shadow: 1px 1px 2px #333"
-              @sliding-start="onSlideStart"
-              @sliding-end="onSlideEnd"
-            >
-              <!-- Text slides with image -->
-              <b-carousel-slide
-                v-for="item in items"
-                :key="item.id"
-                :img-src="`${ipBackend}${item}`"
-              >
-              </b-carousel-slide>
-            </b-carousel>
-            <b-list-group-item variant="dark" class="text-center"
-              >Terima kasih telah mengunjungi website kami</b-list-group-item
-            >
-          </b-col>
-          <b-col
-            class="col-lg-6 col-sm-12 col-12 col-md-12 mb-5"
-            style="margin: 0; padding: 0"
+          </b-carousel-slide>
+        </b-carousel>
+        <b-list-group-item variant="dark" class="text-center"
+          >Terima kasih telah mengunjungi website kami</b-list-group-item
+        >
+        <b-card>
+          <b-list-group-item class="text-center headerInputPesanan"
+            >Masukkan data pribadi anda</b-list-group-item
           >
-            <b-col></b-col>
-            <b-col>
-              <b-card>
-                <b-list-group-item class="text-center headerInputPesanan"
-                  >MASUKKAN PESANAN ANDA</b-list-group-item
-                >
-                <b-form-input
-                  class="mt-4"
-                  size="sm"
-                  placeholder="Nama"
-                  v-model="namaPemesan"
-                  required
-                ></b-form-input>
-                <b-form-textarea
-                  class="mt-4"
-                  size="sm"
-                  v-model="alamatPemesan"
-                  placeholder="Alamat"
-                  required
-                ></b-form-textarea>
+          <b-form-input
+            class="mt-4"
+            size="sm"
+            placeholder="Nama"
+            v-model="namaPemesan"
+            required
+          ></b-form-input>
+          <b-form-textarea
+            class="mt-4"
+            size="sm"
+            v-model="alamatPemesan"
+            placeholder="Alamat"
+            required
+          ></b-form-textarea>
 
-                <b-form-input
-                  class="mt-4"
-                  placeholder="NIK"
-                  size="sm"
-                  v-model="NIKPemesan"
-                  maxlength="16"
-                  required
-                ></b-form-input>
+          <b-form-input
+            class="mt-4"
+            placeholder="NIK"
+            size="sm"
+            v-model="NIKPemesan"
+            required
+          ></b-form-input>
 
-                <b-form-input
-                  class="mt-4"
+          <b-form-input
+            class="mt-4"
+            size="sm"
+            placeholder="No. HP"
+            v-model="noHPPemesan"
+            required
+          ></b-form-input>
+          <!-- <b-form-input
+            v-else
+            class="mt-4"
+            size="sm"
+            placeholder="pemesan"
+            disabled
+          ></b-form-input> -->
+          <b-list-group-item class="text-center my-4 headerInputPesanan"
+            >Pilih Pesanan Anda</b-list-group-item
+          >
+          <b-row>
+            <b-col class="col-6">
+              <b-form-group label="pilih pesanan anda:">
+                <!-- <b-form-select
+                  v-model="kategoriProduk"
+                  :options="kategori"
                   size="sm"
-                  placeholder="No. HP"
-                  maxlength="13"
-                  v-model="noHPPemesan"
-                  required
-                ></b-form-input>
-                <b-list-group-item v-if="pesanan" class="mt-4" size="sm">
-                  {{ pesanan }}</b-list-group-item
+                  class="formInput select"
                 >
-                <b-form-input
-                  v-else
-                  class="mt-4"
-                  size="sm"
-                  placeholder="pemesan"
-                  disabled
-                ></b-form-input>
+                  <template #first>
+                    <b-form-select-option :value="null" style="color: white"
+                      >-- pilih pesanan anda --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select> -->
+                <select
+                  class="form-select formInput select form-select-sm"
+                  v-model="kategoriProduk"
+                >
+                  <option selected value="null" style="color: white">
+                    -- pilih pesanan anda --
+                  </option>
 
-                <b-row>
-                  <b-col class="col-6" v-if="kategoriProduk">
-                    <b-form-select
-                      v-model="pesanan"
-                      :options="barang"
-                      size="sm"
-                      class="formInput mt-4 select"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled
-                          >-- Silahkan Pilih Produk --</b-form-select-option
-                        >
-                      </template>
-                    </b-form-select>
-                  </b-col>
-                  <b-col class="col-6" v-else>
-                    <b-form-select
-                      v-model="pesanan"
-                      :options="barang"
-                      size="sm"
-                      class="formInput mt-4 select"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled
-                          >-- Silahkan Pilih Produk --</b-form-select-option
-                        >
-                      </template>
-                    </b-form-select>
-                  </b-col>
-                  <b-col class="col-6">
-                    <b-form-select
-                      v-model="kategoriProduk"
-                      :options="kategori"
-                      size="sm"
-                      class="formInput mt-4 select"
-                    >
-                      <template #first>
-                        <b-form-select-option :value="null" disabled
-                          >-- Silahkan Pilih Kategori --</b-form-select-option
-                        >
-                      </template>
-                    </b-form-select>
-                  </b-col>
-                </b-row>
-                <b-button
-                  v-if="!loading"
-                  block
-                  class="mt-3 button-pesanan"
-                  @click="submit()"
-                  >Konfirmasi</b-button
-                >
-                <b-button
-                  v-else
-                  disabled
-                  block
-                  class="mt-3 button-pesanan"
-                  @click="submit()"
-                  >Konfirmasi</b-button
-                >
-              </b-card>
+                  <option v-for="list in kategori" :key="list.id">
+                    {{ list }}
+                  </option>
+                </select>
+              </b-form-group>
             </b-col>
-            <b-col></b-col>
-          </b-col>
-        </b-row>
+            <b-col class="col-6" v-if="kategoriProduk">
+              <b-form-group label="pilih detail pesanan anda:">
+                <!-- <b-form-select
+                  v-model="pesanan"
+                  :options="barang"
+                  size="sm"
+                  class="formInput select"
+                >
+                  <template #first>
+                    <b-form-select-option :value="null" style="color: white"
+                      >-- Silahkan detail pilih produk --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select> -->
+                <select
+                  class="form-select formInput select form-select-sm"
+                  v-model="pesanan"
+                >
+                  <option selected value="null" style="color: white">
+                    -- Silahkan detail pilih produk --
+                  </option>
+
+                  <option v-for="list in barang" :key="list.id">
+                    {{ list }}
+                  </option>
+                </select>
+              </b-form-group>
+            </b-col>
+            <b-col class="col-6" v-else>
+              <b-form-group label="pilih detail pesanan anda:">
+                <!-- <b-form-select
+                  v-model="pesanan"
+                  :options="barang"
+                  size="sm"
+                  class="formInput select"
+                >
+                  <template #first>
+                    <b-form-select-option :value="null" style="color: white"
+                      >-- Silahkan detail pilih produk --</b-form-select-option
+                    >
+                  </template>
+                </b-form-select> -->
+                <select
+                  class="form-select formInput select form-select-sm"
+                  v-model="pesanan"
+                >
+                  <option selected value="null" style="color: white">
+                    -- Silahkan detail pilih produk --
+                  </option>
+
+                  <option v-for="list in barang" :key="list.id">
+                    {{ list }}
+                  </option>
+                </select>
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-button
+            v-if="!loading"
+            block
+            class="mt-3 button-pesanan"
+            @click="submit()"
+            >Konfirmasi</b-button
+          >
+          <b-button
+            v-else
+            disabled
+            block
+            class="mt-3 button-pesanan"
+            @click="submit()"
+            >Konfirmasi</b-button
+          >
+        </b-card>
       </template>
     </div>
   </div>
@@ -205,7 +228,8 @@ export default {
   },
   watch: {
     async kategoriProduk(newValue, oldValue) {
-      if (newValue !== oldValue) {
+      if (newValue !== oldValue && newValue !== null) {
+        console.log(newValue, oldValue);
         this.barang = [];
         this.loading = true;
         for (let i = 0; i < this.listKategori.length; i++) {
@@ -225,7 +249,7 @@ export default {
       }
     },
     async pesanan(newValue, oldValue) {
-      if (newValue !== oldValue) {
+      if (newValue !== oldValue && newValue !== null) {
         for (let i = 0; i < this.listPesanan.length; i++) {
           if (this.listPesanan[i].namaBarang == this.pesanan) {
             this.pic = this.listPesanan[i].gambarBarang;
@@ -247,6 +271,7 @@ export default {
     async getBanner() {
       this.loading = true;
       await this.$axios.get(`${ipBackendBanner}listAll`).then((list) => {
+        console.log(list);
         for (let i = 0; i < list.data.data.length; i++) {
           this.items.push(list.data.data[i].fileBanner);
         }
@@ -291,7 +316,6 @@ export default {
         this.namaPemesan !== "" &&
         this.alamatPemesan !== "" &&
         this.noHPPemesan !== "" &&
-        this.NIKPemesan !== "" &&
         this.kategoriProduk !== "" &&
         this.pesanan !== ""
       ) {
@@ -309,9 +333,7 @@ export default {
             this.masterBarangId = "";
             this.userId = "";
 
-            alert(
-              "terima kasih telah melakukan pesanan \nanda akan di hubungi oleh administari kami"
-            );
+            alert("Anda akan dihubungi oleh admin kami");
             window.location.href = "http://riteza.com/";
           });
         this.loading = false;
@@ -324,8 +346,6 @@ export default {
 </script>
 <style scoped>
 #bg-pesanan {
-  height: 122vh;
-  width: 98.7vw;
   padding: 0;
   margin: 0;
 }
@@ -343,6 +363,7 @@ export default {
 .formInput {
   border-radius: 50px;
   background-color: #02284f;
+  color: white;
 }
 .button-input {
   margin-top: 24px;
@@ -388,7 +409,9 @@ td {
   width: 500px;
 }
 .headerInputPesanan {
-  font-weight: 800;
+  padding: 0px;
+  margin: 0px;
+  font-size: 30px;
   color: white;
   background-color: #5936d8;
 }

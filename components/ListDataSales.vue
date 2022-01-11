@@ -7,7 +7,7 @@
           size="sm"
           v-model="status"
           variant="outline-primary"
-          @dblclick="update(row)"
+          @click="update(row)"
           class="mr-2"
         >
           <b-icon icon="pencil"></b-icon>
@@ -20,7 +20,7 @@
           :per-page="perPage"
           :current-page="currentPage"
           variant="outline-primary"
-          @dblclick="cancel(row)"
+          @click="cancel(row)"
           class="mr-2"
         >
           <b-icon icon="trash"></b-icon>
@@ -33,7 +33,7 @@
           :per-page="perPage"
           :current-page="currentPage"
           variant="outline-primary"
-          @dblclick="goTo(row)"
+          @click="goTo(row)"
           class="mr-2"
         >
           <b-icon icon="pencil"></b-icon>
@@ -74,7 +74,7 @@ export default {
         { key: "no", thClass: "bg-info text-light" },
         { key: "username", sortable: false, thClass: "bg-info text-light" },
         { key: "noHp", sortable: false, thClass: "bg-info text-light" },
-        { key: "jenisKelamin", sortable: false, thClass: "bg-info text-light" },
+        { key: "alamat", sortable: false, thClass: "bg-info text-light" },
         { key: "update", thClass: "bg-info text-light" },
         { key: "delete", thClass: "bg-info text-light" },
         { key: "ganti_PW", thClass: "bg-info text-light" },

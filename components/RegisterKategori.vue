@@ -65,7 +65,7 @@ export default {
       perPage: 10,
       currentPage: 1,
       fields: [
-        { key: "no", thClass: "bg-info text-light" },
+        { key: "nomor", thClass: "bg-info text-light " },
         { key: "namaKategori", thClass: "bg-info text-light" },
         { key: "delete", thClass: "bg-info text-light" },
       ],
@@ -150,3 +150,6 @@ export default {
   },
 };
 </script>
+<style scoped>
+
+</style>
